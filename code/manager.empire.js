@@ -110,6 +110,12 @@ class mngEmpire {
 	run() {
 		this.garbageCollection()
 		//logic for each task needed done in the empire
+
+		//Fill myRooms
+		var myroomlist = _.values(Game.rooms).filter(r => _.get(r, ['controller', 'owner', 'username'], undefined) === playerUsername);
+		for (let m in myroomlist) {
+			myRooms[myroomlist[m].name] = myroomlist[m];
+		}
 		
 		
 		//console.log("Empire: " + this.name)

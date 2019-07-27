@@ -69,19 +69,28 @@ module.exports = {
 							return
 						}
 					} else {
-						if (creep.carry[RESOURCE_POWER] > 0) {
-							creep.task = Tasks.transferAll(creep.room.storage)
-							return
-						}
-
 						if (powerSpawn.energy < powerSpawn.energyCapacity) {
 							creep.task = Tasks.transfer(powerSpawn)
 							return
 						} else {
+							if (creep.carry[RESOURCE_POWER] > 0) {
+								creep.task = Tasks.transferAll(creep.room.storage)
+								return
+							}
 							creep.task = Tasks.transferAll(creep.room.storage)
 							return
 						}
+
+
 					}
+				}
+			} else {
+				if (powerSpawn.power < powerSpawn.powerCapacity && creep.carry[RESOURCE_POWER] > 0) {
+					creep.task = Tasks.transfer(powerSpawn)
+					return
+				} else {
+					creep.task = Tasks.transferAll(creep.room.storage)
+					return
 				}
 			}
 		}

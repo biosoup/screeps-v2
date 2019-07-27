@@ -148,13 +148,14 @@ module.exports = function (grunt) {
     });
 
     // Combine the above into a default task
-	grunt.registerTask('default', ['private']);
-	grunt.registerTask('private', ['clean', 'copy:screeps', 'file_append:versioning', 'sync:private']);
+    grunt.registerTask('default', ['private']);
+    grunt.registerTask('private', ['clean', 'copy:screeps', 'file_append:versioning', 'sync:private']);
     grunt.registerTask('mmo', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps:mmo']);
     grunt.registerTask('s2', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps:s2']);
     grunt.registerTask('s1', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps:s1']);
-	grunt.registerTask('test', ['jsbeautifier:verify']);
-	grunt.registerTask('pretty', ['jsbeautifier:modify']);
+    grunt.registerTask('all', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps:mmo', 'screeps:s2', 'screeps:s1', 'sync:private']);
+    grunt.registerTask('test', ['jsbeautifier:verify']);
+    grunt.registerTask('pretty', ['jsbeautifier:modify']);
 
     /* grunt.registerTask('default', ['screeps:mmo', 'screeps:s2']);
     grunt.registerTask('mmo', ['screeps:mmo']);

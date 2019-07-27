@@ -62,11 +62,11 @@ module.exports.loop = function () {
 			CPUdebugString = CPUdebugString.concat("<br>Start: " + Game.cpu.getUsed() + " ")
 		}
 
-		//Fill myRooms
+		/* //Fill myRooms
 		var myroomlist = _.values(Game.rooms).filter(r => _.get(r, ['controller', 'owner', 'username'], undefined) === playerUsername);
 		for (let m in myroomlist) {
 			myRooms[myroomlist[m].name] = myroomlist[m];
-		}
+		} */
 
 		//run every 25 ticks and only when we have spare bucket CPU
 		/* if ((Game.time % DELAYSPAWNING) == 0 && Game.cpu.bucket > CPU_THRESHOLD) {

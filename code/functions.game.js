@@ -643,7 +643,7 @@ global.buyLow = function (amount, resource, priceLimit) {
 		resourceType: resource
 	});
 	if (orders.length > 0) {
-		orders = _.filter(orders, (f) => f.price <= priceLimit && f.remainingAmount > 0)
+		orders = _.filter(orders, (f) => f.price <= priceLimit && f.remainingAmount > 1)
 		orders = _.sortBy(orders, "amount");
 		orders = _.sortBy(orders, "price");
 
