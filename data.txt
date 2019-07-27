@@ -1,0 +1,71 @@
+calls time avg function
+5999 1280.6 0.213 Creep.run
+2419 538.7 0.223 Creep.travelTo
+2221 460.0 0.207 Creep.move
+2317 451.2 0.195 Creep.runRole
+1301 263.0 0.202 Creep.harvest
+7537 224.1 0.030 Room.find
+2293 189.6 0.083 RoomPosition.findClosestByPath
+2000 118.0 0.059 RoomPosition.findInRange
+456 97.7 0.214 Creep.reserveController
+401 90.4 0.225 Creep.upgradeController
+148 31.6 0.213 Creep.repair
+120 31.5 0.263 Creep.transfer
+16058 30.9 0.002 RoomPosition.inRangeTo
+101 24.2 0.240 Creep.build
+205 21.7 0.106 RoomPosition.availableNeighbors
+95 21.3 0.224 Room.creepSpawnRun
+5005 17.8 0.004 RoomPosition.getRangeTo
+1640 15.4 0.009 RoomPosition.isPassible
+4193 13.4 0.003 RoomPosition.isNearTo
+874 12.0 0.014 Creep.say
+457 11.5 0.025 Room.linksRun
+1444 10.2 0.007 RoomPosition.lookFor
+38 9.6 0.253 Creep.withdraw
+3592 9.0 0.003 RoomPosition.isEqualTo
+3921 6.0 0.002 RoomPosition.toJSON
+Avg: 23.30 Total: 2283.32 Ticks: 98
+
+
+calls        time        avg        function                                                                                                  
+    5767        1181.4        0.205        Creep.run
+    2408        429.7        0.178        Creep.runRole
+    1971        420.0        0.213        Creep.travelTo
+    1818        377.5        0.208        Creep.move
+    1289        275.7        0.214        Creep.harvest
+    6492        197.6        0.030        Room.find
+    2693        196.5        0.073        RoomPosition.findClosestByPath
+    619        131.1        0.212        Creep.reserveController
+    2046        110.5        0.054        RoomPosition.findInRange
+    386        91.6        0.237        Creep.upgradeController
+    146        31.1        0.213        Creep.repair
+    117        29.8        0.254        Creep.transfer
+    15256        28.1        0.002        RoomPosition.inRangeTo
+    101        24.2        0.239        Creep.build
+    94        15.7        0.167        Room.creepSpawnRun
+    4424        12.1        0.003        RoomPosition.getRangeTo
+    4162        11.4        0.003        RoomPosition.isNearTo
+    443        11.4        0.026        Room.linksRun
+    1356        10.8        0.008        RoomPosition.lookFor
+    189        10.8        0.057        RoomPosition.availableNeighbors
+    32        8.0        0.251        Creep.withdraw
+    923        8.0        0.009        Creep.say
+    3408        7.8        0.002        RoomPosition.isEqualTo
+    3902        7.1        0.002        RoomPosition.toJSON
+    1059        5.8        0.005        Room.lookForAt
+    Avg: 20.60    Total: 2018.33    Ticks: 98
+
+
+longDistanceLorry-W32N13--8028030 going for 5d09fae741a69b286384a8fd in W33N13 with 2000 in distance 70 for a return of e/d 5.714285714285714
+[{"id":"5cff24da5b0b7e667bffeb4f","pos":{"x":38,"y":21,"roomName":"W27N14"},"energy":920,"time":8028615,"distance":75,"ed":6.133333333333334},{"id":"5cfe
+d049c4be3409e53dab3d","pos":{"x":15,"y":35,"roomName":"W27N15"},"energy":2000,"time":8028615,"distance":83,"ed":12.048192771084338},{"id":"5cff237a63738f
+09b78089bb","pos":{"x":34,"y":17,"roomName":"W28N15"},"energy":2000,"time":8028615,"distance":81,"ed":12.345679012345679}]
+longDistanceLorry-W28N14--8027695 going for 5cff237a63738f09b78089bb in W28N15 with 2000 in distance 81 for a return of e/d 4.938271604938271
+[{"id":"5cff24da5b0b7e667bffeb4f","pos":{"x":38,"y":21,"roomName":"W27N14"},"energy":920,"time":8028615,"distance":75,"ed":6.133333333333334},{"id":"5cfe
+d049c4be3409e53dab3d","pos":{"x":15,"y":35,"roomName":"W27N15"},"energy":2000,"time":8028615,"distance":83,"ed":12.048192771084338},{"id":"5cff237a63738f
+09b78089bb","pos":{"x":34,"y":17,"roomName":"W28N15"},"energy":2000,"time":8028615,"distance":81,"ed":12.345679012345679}]
+longDistanceLorry-W28N14--8027610 going for 5cff237a63738f09b78089bb in W28N15 with 2000 in distance 81 for a return of e/d 4.938271604938271
+Spawn3 is spawning creep: transporter-W32N13--8028640 in room W32N13. (CPU used: 0.7667390000000296) on tick 8028640 creeps left: ["transporter"]
+[{"id":"5cff24da5b0b7e667bffeb4f","pos":{"x":38,"y":21,"roomName":"W27N14"},"energy":920,"time":8028615,"distance":75,"ed":6.133333333333334},{"id":"5cfe
+d049c4be3409e53dab3d","pos":{"x":15,"y":35,"roomName":"W27N15"},"energy":2000,"time":8028615,"distance":83,"ed":12.048192771084338},{"id":"5cff237a63738f
+09b78089bb","pos":{"x":34,"y":17,"roomName":"W28N15"},"energy":2000,"time":8028615,"distance":81,"ed":12.345679012345679}]

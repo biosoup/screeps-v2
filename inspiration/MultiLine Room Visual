@@ -1,0 +1,39 @@
+/**
+     * display multi lines of text using room visual
+     * @param lines the array of text we want to display
+     * @param x the x value we are starting it at
+     * @param y the y value we are starting it at
+     * @param roomName the room name its going in
+     * @param isLeft if we are left aligning
+     */
+function multiLineText(lines, x, y, roomName, isLeft) {
+        if (lines.length === 0) {
+            return;
+        }
+        const vis = new RoomVisual(roomName);
+        const textColor = "#bab8ba";
+        const textSize = 0.8;
+        const charHeight = textSize * 1.1;
+
+        // Draw text
+        let dy = 0;
+        for (const line of lines) {
+            if (isLeft) {
+                vis.text(line, x, y + dy, {
+                    align: "left",
+                    color: textColor,
+                    opacity: 0.8,
+                    font: " .7 Trebuchet MS"
+                });
+            } else {
+                vis.text(line, x, y + dy, {
+                    align: "right",
+                    color: textColor,
+                    opacity: 0.8,
+                    font: " .7 Trebuchet MS"
+                });
+            }
+
+            dy += charHeight;
+        }
+    }

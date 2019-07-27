@@ -1,0 +1,124 @@
+/** TODO: or TO BE DONE
+token: 99f7c6d7-209f-48ce-bdf0-57ff39d125bf
+
+PRIORITIES
+* dynamic spawning
+    - low lever (RCL 0-3)
+        - maximize harvesters
+        - miners for sources
+        - 1 upgrader, 1 builder, 1 wallrepair to 500k
+        - all based on the e/t that can be brought in
+    - mid level (RCL 4-6)
+        - remote mining to fill storage
+        - dynamic number of upgraders mixed in the que
+        - wallrepair to 2 mil 
+        - spawnAttendant + lorry
+        - add claimers
+    - high level (RCL 7+)
+        - add mining, trading and scientist
+
+* base-building code
+    - flag based
+    - core body
+        - first to show visuals based from flag/spawn1
+            - prepare fixed steps for each RCL
+        - later automatic space find
+    - find best place for arms
+    - find roads to sources and stuff
+    - automatic repair
+
+* emergency situation
+    - base lockdown
+        - no spawning except guard
+        - priority refill for towers
+    - safemode
+    - request help
+
+* scout role
+    - 2T, 2M
+
+* energy optimization
+    - recycling of creeps
+    - lorry dynamic sizing
+    - gather energy input room/remotes
+
+* group defense/attack
+
+
+- flag based attack??
+- intershard creeps
+	- navigation
+	- memory handling
+	- send rampart distmantler
+		- flag based?
+- arbitrage / autobuy code
+- autobuy code for minimum levels in room storages
+- room visual for enemy room
+	- weak spots
+	- tower DPS
+	- flag based?
+------
+
+
+Saruss [10:49 PM]
+I have similar. Its does not take that much CPU, but i cache it for own rooms
+
+In addition, i save which positions are attackable by range attack parts, but not walkable for enemy creeps
+
+explicit [10:58 PM]
+I do it as part of wall calculation. Then save the cost matrix to memory. I have protected, danger(within ranged attack range), unprotected values.
+I feel like general hostile avoidance is better.
+
+Saruss [11:08 PM]
+I do it as part of wall calc too, but as long as the walls are not up (early RCL), i cache another one. I think (for as i do not just wall all exits) its important when getting sieged, because with that, my code looks for what to spawn creeps for (and for what not),  so i do not send -for example harvesters, miners etc.- out into sure death and waste energy. Or to repair/build outside of the base (maybe a link at a source). This makes my rooms a bunch more resistant against long lastings attacks.
+
+eduter [11:17 PM]
+As part of my room planing, I use flood-fill to know what's inside the base and store it in memory. My workers choose parking spots when they start working on a target, so I only allow them to choose parking spots outside the walls, when the room is not under siege.
+
+Saruss [11:18 PM]
+I have a free parking spot inside, if possible, i check/reserve a big enough space.
+
+
+- multiroom focused rewrite
+    - https://www.reddit.com/r/screeps/comments/6uzqkb/tips_for_multiroom_architecture/dmozat8/
+    - smarter energy redistribution
+        - room based logic
+        - calculate aginst maximum energy production
+    - https://screeps.fandom.com/wiki/Tips
+    - states of things (and gotos?)
+        - https://screeps.com/forum/topic/2556/workflow-tips-and-prioritization-for-new-players/5
+
+- stats !!
+    - process execution time
+    - enemies present
+        - add owner stats
+    - number of buildings and their progress
+    - number of each spawn type
+    - defenses statistics
+        - including tower stats
+    - spawn busy time
+    - screeps work
+        - energy transfers
+        - idle time per workgroup !!!
+    - enemy room statistics?
+        - to know their expansion rate, and how much creeps are getting killed
+    
+- visual / console
+    - add a visual for spawn
+    - next spawn
+    - add a say to creeps
+    - add s console status/visual about how the room is running
+    
+- better console conrol
+    - on room level?
+
+- defense / attack creeps
+    - flag based attack waves
+    
+- structure mapping
+    - get all cureent structures
+    - optimal structure placement
+    - flags for future expansion + visuals
+    - 1 space between spawn<>link<>storage
+
+*/
