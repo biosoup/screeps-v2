@@ -8,6 +8,7 @@
 
 //import the base blueprints
 require("base.blueprint");
+require("globals.old")
 
 Room.prototype.roomEconomy = function () {
 	let cpuStart = Game.cpu.getUsed();

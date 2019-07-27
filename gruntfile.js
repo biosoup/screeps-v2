@@ -7,6 +7,7 @@ module.exports = function (grunt) {
     // Allow grunt options to override default configuration
     const branch = grunt.option('branch') || config.branch;
     const email = grunt.option('email') || config.email;
+    const username = grunt.option('username') || config.username;
     const password = grunt.option('password') || config.password;
     const ptr = grunt.option('ptr') ? true : config.ptr;
     const private_directory = grunt.option('private_directory') || config.private_directory;
@@ -55,7 +56,7 @@ module.exports = function (grunt) {
                         host: 'server2.screepspl.us',
                         http: false
                     },
-                    email: email,
+                    email: username,
                     password: password,
                     branch: branch,
                     ptr: ptr
@@ -68,7 +69,7 @@ module.exports = function (grunt) {
                         host: 'server1.screepspl.us',
                         http: false
                     },
-                    email: email,
+                    email: username,
                     password: password,
                     branch: branch,
                     ptr: ptr

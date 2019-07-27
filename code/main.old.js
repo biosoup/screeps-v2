@@ -38,7 +38,7 @@ module.exports.loop = function () {
 		MemHack.pretick()
 		stats.reset()
 
-		let cpu = Game.cpu.getUsed();
+		/* let cpu = Game.cpu.getUsed();
 		if (Game.time == global.start) {
 			cpu -= global.reqCPU;
 		}
@@ -55,7 +55,7 @@ module.exports.loop = function () {
 				// if not, delete the memory entry
 				delete Memory.creeps[name];
 			}
-		}
+		} */
 
 		var CPUdebugString = "CPU Debug";
 		if (CPUdebug == true) {
@@ -69,7 +69,7 @@ module.exports.loop = function () {
 		}
 
 		//run every 25 ticks and only when we have spare bucket CPU
-		if ((Game.time % DELAYSPAWNING) == 0 && Game.cpu.bucket > CPU_THRESHOLD) {
+		/* if ((Game.time % DELAYSPAWNING) == 0 && Game.cpu.bucket > CPU_THRESHOLD) {
 			if (CPUdebug == true) {
 				CPUdebugString = CPUdebugString.concat("<br>Start Spawn Code: " + Game.cpu.getUsed())
 			}
@@ -83,9 +83,9 @@ module.exports.loop = function () {
 					Game.rooms[roomName].refreshData(roomName)
 				}
 			}
-		}
+		} */
 
-		if (CPUdebug == true) {
+		/* if (CPUdebug == true) {
 			CPUdebugString = CPUdebugString.concat("<br>Start Tasks Code: " + Game.cpu.getUsed())
 		}
 		// ************ NEW TASK SYSTEM ************
@@ -109,7 +109,7 @@ module.exports.loop = function () {
 					console.log("RUN ROLE ERR: " + creep + " at " + err.stack)
 				}
 			}
-		}
+		} */
 
 		if (CPUdebug == true) {
 			CPUdebugString = CPUdebugString.concat("<br>Start Rooms Code: " + Game.cpu.getUsed())
@@ -217,7 +217,7 @@ module.exports.loop = function () {
 					}
 				}
 
-				//add room visuals
+				/* //add room visuals
 				if (Game.cpu.bucket > CPU_THRESHOLD) {
 					try {
 						Game.rooms[roomName].basicVisuals()
@@ -225,9 +225,9 @@ module.exports.loop = function () {
 					} catch (err) {
 						console.log("VISUALS ERR: " + tower + " " + err.stack)
 					}
-				}
+				} */
 
-				// refresh every 10 ticks if we have no master spawn on our own room
+				/* // refresh every 10 ticks if we have no master spawn on our own room
 				if ((Game.time % 10) == 0 && _.isEmpty(Game.rooms[roomName].memory.masterSpawn) &&
 					Game.cpu.bucket > CPU_THRESHOLD &&
 					Game.rooms[roomName].controller != undefined &&
@@ -242,9 +242,9 @@ module.exports.loop = function () {
 					var response = Game.rooms[roomName].baseRCLBuild()
 					console.log(roomName + " RCL upgrade! " + response)
 				}
-				Game.rooms[roomName].memory.RCL = Game.rooms[roomName].controller.level;
+				Game.rooms[roomName].memory.RCL = Game.rooms[roomName].controller.level; */
 
-				// refresh room data 
+				/* // refresh room data 
 				if ((Game.time % DELAYFLOWROOMCHECK) == 0 &&
 					Game.cpu.bucket > CPU_THRESHOLD &&
 					Game.rooms[roomName].controller != undefined &&
@@ -255,19 +255,19 @@ module.exports.loop = function () {
 					Game.rooms[roomName].refreshData(roomName)
 					//refreshed room buildings
 					Game.rooms[roomName].baseRCLBuild()
-				}
+				} */
 
 
-				if ((Game.time % DELAYLINK) == 0 && Game.cpu.bucket > CPU_THRESHOLD) {
+				/* if ((Game.time % DELAYLINK) == 0 && Game.cpu.bucket > CPU_THRESHOLD) {
 					//run link balancing
 					Game.rooms[roomName].linksRun(roomName)
 
 					//refresh refresh remote containers
 					Game.rooms[roomName].refreshContainerSources(roomName)
-				}
+				} */
 
 				// find all towers
-				var towers = Game.rooms[roomName].towers
+				/* var towers = Game.rooms[roomName].towers
 				try {
 					if (!_.isEmpty(towers)) {
 						//find hostiles in the room
@@ -290,9 +290,9 @@ module.exports.loop = function () {
 					}
 				} catch (err) {
 					console.log("TOWER ERR: " + tower + " " + err.stack)
-				}
+				} */
 
-				if (Game.cpu.bucket > CPU_THRESHOLD * 2 && Game.rooms[roomName].controller.my) {
+				/* if (Game.cpu.bucket > CPU_THRESHOLD * 2 && Game.rooms[roomName].controller.my) {
 					try {
 						// default resource limits
 						market.resourceLimits(roomName);
@@ -307,11 +307,11 @@ module.exports.loop = function () {
 					} catch (err) {
 						console.log("ROOM FNC ERR: " + roomName + " " + err.stack)
 					}
-				}
+				} */
 			}
 		}
 
-		if (Game.cpu.bucket > CPU_THRESHOLD * 2) {
+		/* if (Game.cpu.bucket > CPU_THRESHOLD * 2) {
 			//run market code
 			try {
 				market.marketCode();
@@ -319,9 +319,9 @@ module.exports.loop = function () {
 				console.log("ROOM FNC ERR: " + roomName + " " + err.stack)
 			}
 
-		}
+		} */
 
-		if (CPUdebug == true) {
+		/* if (CPUdebug == true) {
 			CPUdebugString = CPUdebugString.concat("<br>Start Creep run Code: " + Game.cpu.getUsed())
 		}
 		// Now that all creeps have their tasks, execute everything
@@ -336,7 +336,7 @@ module.exports.loop = function () {
 				console.log("MAIN ERR: " + creep + " at: " + err.stack)
 				//Game.creeps[creep].suicide()
 				Game.creeps[creep].task = {}
-			}
+			} */
 		}
 
 		if (CPUdebug == true) {

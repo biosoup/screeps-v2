@@ -112,7 +112,7 @@ Creep.prototype.getEnergy = function (creep, useSource) {
 	}
 
 	//link in body core
-	if (!_.isEmpty(creep.room.storage) || creep.room.storage.store[RESOURCE_ENERGY] <= 1000) {
+	if (!_.isEmpty(creep.room.storage)) {
 		var link = creep.room.storage.pos.findInRange(FIND_STRUCTURES, 2, {
 			filter: s => s.structureType == STRUCTURE_LINK && s.energy == s.energyCapacity
 		})[0];

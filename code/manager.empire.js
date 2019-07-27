@@ -11,23 +11,6 @@ let task = require('task');
 
 class mngEmpire {
 	/**
-	 * Get the singleton object
-	 * @return {mngEmpire}
-	 */
-	static get _() {
-		if (mngEmpire._singleton === undefined)
-			mngEmpire._ = new mngEmpire();
-		return mngEmpire._singleton;
-	}
-
-	/**
-	 * Set the singleton object
-	 * @param {mngEmpire}
-	 */
-	static set _(singleton) {
-		mngEmpire._singleton = singleton;
-	}
-	/**
 	 * Init the class
 	 * @return {tasks}
 	 */
@@ -42,10 +25,10 @@ class mngEmpire {
 	 * @constructor
 	 * @this {tasks}
 	 */
-	constructor(name) {
+	constructor() {
 		mngEmpire.init();
 		mngEmpire.taskList = new tasks;
-		mngEmpire.name = name
+		this.name = Game.shard.name
 	}
 
 	get taskList() {
@@ -125,8 +108,11 @@ class mngEmpire {
         */
 
 	run() {
+		this.garbageCollection()
 		//logic for each task needed done in the empire
-		console.log(this._name)
+		
+		
+		//console.log("Empire: " + this.name)
 	}
 
 	garbageCollection() {
