@@ -4,7 +4,12 @@ module.exports = upgrader = {
 	// a function to run the logic for this role
 	/** @param {Creep} creep */
 	newTask: function (creep) {
-		if (creep.carry.energy > 0) {
+		if (_.sum(creep.carry) > creep.carry[RESOURCE_ENERGY] && !_.isEmpty(creep.room.storage)) {
+			//creep has something other than energy
+			creep.task = Tasks.transferAll(creep.room.storage);
+			creep.say("other")
+			return;
+		} else if (creep.carry.energy > 0) {
 			//do the actual job
 
 			if (!_.isEmpty(creep.room.controller.sign)) {

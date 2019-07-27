@@ -120,8 +120,9 @@ class mngColony {
 
 		//console.log("Colony: " + this.homeRoom)
 
-		Game.rooms[this.homeRoom].creepSpawnRun(Game.rooms[this.homeRoom]);
-
+		if ((Game.time % DELAYSPAWNING) == 0 && Game.cpu.bucket > CPU_THRESHOLD) {
+			Game.rooms[this.homeRoom].creepSpawnRun(Game.rooms[this.homeRoom]);
+		}
 
 		// find all towers
 		var towers = Game.rooms[this.homeRoom].towers
@@ -142,7 +143,9 @@ class mngColony {
 				} else {
 					for (var tower of towers) {
 						tower.healCreeps()
-						tower.repairStructures();
+						if ((Game.time % 3) == 0) {
+							tower.repairStructures();
+						}
 					}
 				}
 			}
@@ -184,16 +187,15 @@ class mngColony {
 			Game.rooms[this.homeRoom].refreshData(this.homeRoom)
 			//refreshed room buildings
 			this.baseRCLBuild()
+		}
 
-			if ((Game.time % DELAYLINK) == 0 && Game.cpu.bucket > CPU_THRESHOLD) {
-				//run link balancing
-				this.linksRun()
+		if ((Game.time % 10) == 0 && Game.cpu.bucket > CPU_THRESHOLD) {
+			//run link balancing
+			//this.linksRun()
+			this.linkBalance()
 
-				//refresh refresh remote containers
-				this.refreshContainerSources()
-			}
-
-
+			//refresh refresh remote containers
+			this.refreshContainerSources()
 		}
 
 		if (Game.cpu.bucket > CPU_THRESHOLD * 2 && Game.rooms[this.homeRoom].controller.my) {
@@ -834,8 +836,109 @@ class mngColony {
 		}
 	}
 
+	linkBalance() {
+		let r = Game.rooms[this.homeRoom]
+		let links = r.links
+		if (!_.isEmpty(links)) {
+			//we have links in room
+			let sourceLinks = []
+			let controllerLinks = []
+			let coreLinks = []
+			if (!_.isEmpty(r.memory.links)) {
+				//find the place of links
+				if (links.length >= 2 && r.memory.links.number < links.length && r.memory.links["controllerLinks"].length == 0) {
+					//update links
+					for (let l in links) {
+						let nearSource = links[l].pos.findInRange(FIND_SOURCES, 3)
+						if (nearSource.length > 0) {
+							//link is nearby source -> consider it source link
+							sourceLinks.push(links[l].id)
+						} else {
+							let nearController = links[l].pos.findInRange(FIND_STRUCTURES, 3, {
+								filter: f => f.structureType == STRUCTURE_CONTROLLER
+							})
+							if (nearController.length > 0) {
+								controllerLinks.push(links[l].id)
+							} else {
+								let nearCore = links[l].pos.findInRange(FIND_STRUCTURES, 3, {
+									filter: f => f.structureType == STRUCTURE_STORAGE
+								})
+								if (nearCore.length > 0) {
+									coreLinks.push(links[l].id)
+								}
+							}
+						}
+					}
+					r.memory.links["sourceLinks"] = sourceLinks
+					r.memory.links["controllerLinks"] = controllerLinks
+					r.memory.links["coreLinks"] = coreLinks
+					r.memory.links["number"] = links.length
+				}
+
+				controllerLinks = r.memory.links["controllerLinks"]
+				sourceLinks = r.memory.links["sourceLinks"]
+				coreLinks = r.memory.links["coreLinks"]
+
+				//controller balancing
+				if (controllerLinks.length >= 1) {
+					for (let cl in controllerLinks) {
+						let cLink = Game.getObjectById(controllerLinks[cl])
+						if (cLink.energy < (cLink.energyCapacity - 100)) {
+							//refill controller link
+							for (let sl in sourceLinks) {
+								let sLink = Game.getObjectById(sourceLinks[sl])
+								if (sLink.energy > 100 && sLink.cooldown == 0) {
+									//source link has enough energy
+									let amount = cLink.energyCapacity - cLink.energy
+									if (amount > sLink.energy) amount = sLink.energy;
+									let response = sLink.transferEnergy(cLink, amount)
+									if (response == 0) {
+										console.log("Balancing controller link, sending: " + amount)
+										break
+									}
+								}
+							}
+						}
+					}
+				}
+
+				//core balancing
+				if (coreLinks.length >= 1) {
+					for (let bl in coreLinks) {
+						let bLink = Game.getObjectById(coreLinks[bl])
+						if (bLink.energy < (bLink.energyCapacity - 100)) {
+							//refill controller link
+							for (let sl in sourceLinks) {
+								let sLink = Game.getObjectById(sourceLinks[sl])
+								if (sLink.energy > 100 && sLink == 0) {
+									//source link has enough energy
+									let amount = bLink.energyCapacity - bLink.energy
+									if (amount > sLink.energy) amount = sLink.energy;
+									let response = sLink.transferEnergy(bLink, amount)
+									if (response == 0) {
+										console.log("Balancing core link, sending: " + amount)
+										break
+									}
+								}
+							}
+						}
+					}
+				}
+			} else {
+				//create memory space for links
+				if (_.isEmpty(r.memory.links)) {
+					r.memory.links = {}
+					r.memory.links["sourceLinks"] = []
+					r.memory.links["controllerLinks"] = []
+					r.memory.links["coreLinks"] = []
+					r.memory.links["number"] = 0
+				}
+			}
+		}
+	}
+
 	linksRun() {
-		let r = this.homeRoom
+		let r = Game.rooms[this.homeRoom]
 		// Link code
 		if (Game.rooms[r].memory.roomArray != undefined && Game.rooms[r].memory.roomArray.links != undefined && Game.rooms[r].memory.roomArray.links.length > 1) {
 			var fillLinks = [];
@@ -904,7 +1007,7 @@ class mngColony {
 	}
 
 	checkForDefeat() {
-		let spawnRoom = this.homeRoom
+		let spawnRoom = Game.rooms[this.homeRoom]
 		if (_.isEmpty(spawnRoom.controller.owner)) {
 			//check for DEMOLITION flag
 			var demoFlags = _.filter(Game.flags, (f) => f.color == COLOR_ORANGE && f.pos.roomName == spawnRoom.name)

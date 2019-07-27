@@ -34,7 +34,7 @@ module.exports = {
 					c.valid == true);
 
 				if (!_.isEmpty(allContainers)) {
-					console.log(JSON.stringify(allContainers))
+					//console.log(JSON.stringify(allContainers))
 				}
 
 				//sort by distance and amount
