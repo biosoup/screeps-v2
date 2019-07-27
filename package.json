@@ -4,7 +4,8 @@
     "devDependencies": {
         "eslint": "^6.1.0",
         "grunt": "^1.0.4",
-        "grunt-screeps": "^1.4.0"
+        "grunt-screeps": "^1.4.0",
+        "grunt-update-reference": "^1.0.0"
     },
     "dependencies": {
         "@types/lodash": "^4.14.134",
