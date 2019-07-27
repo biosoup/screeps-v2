@@ -220,9 +220,19 @@ Creep.prototype.fillStructures = function (creep, workpart = false) {
 		return true;
 	}
 
+	//fill labs with energy
+	var labs = creep.room.find(FIND_MY_STRUCTURES, {
+		filter: f => f.structureType == STRUCTURE_LAB && f.energy < f.energyCapacity
+	})
+	if (!_.isEmpty(labs)) {
+		let lab = creep.pos.findClosestByRange(labs)
+		creep.task = Tasks.transfer(lab);
+		return true;
+	}
+
 	//fill powerSpawns with energy
 	var powerSpawn = creep.room.find(FIND_MY_STRUCTURES, {
-		filter: f => f.structureType == STRUCTURE_POWER_SPAWN
+		filter: f => f.structureType == STRUCTURE_POWER_SPAWN && f.energy < f.energyCapacity
 	})
 	if (!_.isEmpty(powerSpawn)) {
 		creep.task = Tasks.transfer(powerSpawn[0]);
