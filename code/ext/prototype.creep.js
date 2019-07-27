@@ -1,25 +1,25 @@
-require("../tools/creep-tasks");
-var Tasks = require("../tools/creep-tasks");
+require("tools.creep-tasks");
+var Tasks = require("tools.creep-tasks");
 
-let builder = require('../role/role.builder')
-let upgrader = require('../role/role.upgrader')
-let harvester = require('../role/role.harvester')
-let longDistanceHarvester = require('../role/role.longDistanceHarvester')
-let claimer = require('../role/role.claimer')
-let miner = require('../role/role.miner')
-let guard = require('../role/role.guard')
-let einarr = require('../role/role.einarr')
-let runner = require('../role/role.runner')
-let scout = require('../role/role.scout')
-let transporter = require('../role/role.transporter')
-let mineralHarvester = require('../role/role.mineralHarvester')
-let longDistanceMiner = require('../role/role.longDistanceMiner')
-let longDistanceLorry = require('../role/role.longDistanceLorry')
-let longDistanceBuilder = require('../role/role.longDistanceBuilder')
-let scientist = require('../role/role.scientist')
-let wallRepairer = require('../role/role.wallRepairer')
-let herocreep = require('../role/role.herocreep')
-let demolisher = require('../role/role.demolisher')
+let builder = require('role.role.builder')
+let upgrader = require('role.role.upgrader')
+let harvester = require('role.role.harvester')
+let longDistanceHarvester = require('role.role.longDistanceHarvester')
+let claimer = require('role.role.claimer')
+let miner = require('role.role.miner')
+let guard = require('role.role.guard')
+let einarr = require('role.role.einarr')
+let runner = require('role.role.runner')
+let scout = require('role.role.scout')
+let transporter = require('role.role.transporter')
+let mineralHarvester = require('role.role.mineralHarvester')
+let longDistanceMiner = require('role.role.longDistanceMiner')
+let longDistanceLorry = require('role.role.longDistanceLorry')
+let longDistanceBuilder = require('role.role.longDistanceBuilder')
+let scientist = require('role.role.scientist')
+let wallRepairer = require('role.role.wallRepairer')
+let herocreep = require('role.role.herocreep')
+let demolisher = require('role.role.demolisher')
 
 
 Creep.prototype.runRole =

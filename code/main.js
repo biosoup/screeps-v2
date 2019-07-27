@@ -3,21 +3,21 @@
 
 /* global DEFER_REQUIRE */
 
-const MemHack = require('./tools/MemHack');
+const MemHack = require('tools.MemHack');
 MemHack.register()
 
-const profiler = require('./tools/screeps-profiler');
-const stats = require('./tools/stats');
+const profiler = require('tools.screeps-profiler');
+const stats = require('tools.stats');
 // eslint-disable-next-line no-unused-vars
-const Traveler = require('./tools/Traveler');
+const Traveler = require('tools.Traveler');
 
 //Management modules
 let mngEmpire = require('mngEmpire');
 
 // Deffered modules though we can load when we have cpu for it
 DEFER_REQUIRE('global');
-DEFER_REQUIRE('./tools/tools.prototype.Room.structures');
-DEFER_REQUIRE("./tools/tools.creep-tasks");
+DEFER_REQUIRE('tools.tools.prototype.Room.structures');
+DEFER_REQUIRE("tools.tools.creep-tasks");
 
 
 module.exports.loop = function () {

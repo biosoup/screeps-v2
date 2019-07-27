@@ -7,7 +7,7 @@
 */
 
 //import the base blueprints
-require("../base.blueprint");
+require("base.blueprint");
 
 Room.prototype.roomEconomy = function () {
 	let cpuStart = Game.cpu.getUsed();

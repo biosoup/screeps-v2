@@ -1,5 +1,5 @@
 "use strict"
-var AsciiTable = require('./tools/ascii-table')
+var AsciiTable = require('tools.ascii-table')
 
 global.getMasterSpawn = function (roomName) {
 	return Game.rooms[roomName].memory.masterSpawn;

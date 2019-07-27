@@ -2,7 +2,7 @@ module.exports = function (grunt) {
     require('time-grunt')(grunt);
 
     // Pull defaults (including username and password) from .screeps.json
-    const config = require('./screeps.json');
+    const config = require('screeps.json');
 
     // Allow grunt options to override default configuration
     const branch = grunt.option('branch') || config.branch;
@@ -95,28 +95,6 @@ module.exports = function (grunt) {
             }
         },
 
-        reference: {
-            options:{
-                //Define what files contain some reference.
-                searchFileType: [ "*.js" ],
-                //If has some file or path to ignore, path is base on "options.searchPathBase".
-                //searchIgnore:[ "ignore.html","ignore/**/*" ],
-                //Task's log, "simple", "all" or "none"
-                log:"simple"
-            },
-            dist: {
-                options: {
-                    //The base path.
-                    searchPathBase: "./dist",
-                    //Prevent watch instantly changes, which changed by this task.
-                    //referenceIgnore:["*.html"]
-                },
-                //What kind of files that may needed to be update references.(path is not base on "options.searchPathBase")
-                src: [ "dist/**/*.{js}" ]
-            }
-        },
-
-
         /** Push only the relevant file changes */
         sync: {
             private: {
@@ -170,7 +148,7 @@ module.exports = function (grunt) {
 
     // Combine the above into a default task
 	grunt.registerTask('default', ['private']);
-	grunt.registerTask('private', ['clean', 'copy:screeps', 'file_append:versioning', 'sync:private', "reference"]);
+	grunt.registerTask('private', ['clean', 'copy:screeps', 'file_append:versioning', 'sync:private']);
     grunt.registerTask('mmo', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps:mmo']);
     grunt.registerTask('s2', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps:s2']);
     grunt.registerTask('s1', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps:s1']);

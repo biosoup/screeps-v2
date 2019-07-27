@@ -10,25 +10,25 @@ if (CPUdebug == true) {
 }
 
 //system imports
-//import MemHack from './tools.MemHack'
-const MemHack = require('./tools/MemHack');
+//import MemHack from 'tools.MemHack'
+const MemHack = require('tools.MemHack');
 MemHack.register()
 
-require('./globals.old')
-require('./tools/prototype.Room.structures');
-const profiler = require('./tools/screeps-profiler');
-const stats = require('./tools/stats');
+require('globals.old')
+require('tools.prototype.Room.structures');
+const profiler = require('tools.screeps-profiler');
+const stats = require('tools.stats');
 // eslint-disable-next-line no-unused-vars
-var Traveler = require('./tools/Traveler');
-require("./tools/creep-tasks");
+var Traveler = require('tools.Traveler');
+require("tools.creep-tasks");
 require('functions.game');
 
 // import modules
-require('./ext/prototype.creep');
-require('./ext/prototype.tower');
+require('ext/prototype.creep');
+require('ext/prototype.tower');
 require('prototype.spawn');
-require('./ext/prototype.room');
-var market = require('./base.market');
+require('ext/prototype.room');
+var market = require('base.market');
 
 // PROFILER
 profiler.enable();

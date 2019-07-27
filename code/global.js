@@ -2,7 +2,7 @@
  * global.js - Configuration Constants
  */
 'use strict';
-var AsciiTable = require('./tools/ascii-table')
+var AsciiTable = require('tools.ascii-table')
 
 /* eslint-disable no-magic-numbers, no-undef */
 
