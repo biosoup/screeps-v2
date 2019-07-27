@@ -2,7 +2,7 @@ module.exports = function (grunt) {
     require('time-grunt')(grunt);
 
     // Pull defaults (including username and password) from .screeps.json
-    const config = require('screeps.json');
+    const config = require('./Screeps.json');
 
     // Allow grunt options to override default configuration
     const branch = grunt.option('branch') || config.branch;

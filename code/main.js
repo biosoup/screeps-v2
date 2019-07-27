@@ -1,4 +1,3 @@
-/** main.js */
 'use strict';
 
 /* global DEFER_REQUIRE */
