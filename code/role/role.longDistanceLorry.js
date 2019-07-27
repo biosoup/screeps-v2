@@ -22,16 +22,19 @@ module.exports = {
 		if (!_.isEmpty(Game.rooms[creep.memory.home].memory.containerSources)) {
 			if (creep.room.name == creep.memory.home && (creep.carry.energy == 0 || _.isEmpty(creep.memory.target))) {
 				//creep is home, empty, with no target
-				var r = creep.room;
+				var r = Game.rooms[creep.memory.home];
 
 				//get creep TTL
 				var creepPossibleDistance = (creep.ticksToLive / 2) - 40;
 
 				//get all possible targets
-				var allContainers = _.filter(r.memory.containerSources, (c) => (c.energy + (c.distance * 10)) >= creep.carryCapacity && c.distance != false && c.distance < creepPossibleDistance && c.valid == true);
+				var allContainers = _.filter(r.memory.containerSources, (c) => (c.energy + (c.distance * 10)) >= creep.carryCapacity &&
+					c.distance != false &&
+					c.distance < creepPossibleDistance && 
+					c.valid == true);
 
 				if (!_.isEmpty(allContainers)) {
-					//console.log(JSON.stringify(allContainers))
+					console.log(JSON.stringify(allContainers))
 				}
 
 				//sort by distance and amount
@@ -52,7 +55,7 @@ module.exports = {
 							r.memory.containerSources[validTarget.id].valid = false
 							energyLeft = (validTarget.energy + (validTarget.distance * 10)) - creep.carryCapacity
 
-							if (false) {
+							if (true) {
 								console.log(creep.name + " going for " + container.id + " in " + container.room.name + " with " + container.store[RESOURCE_ENERGY] +
 									"(" + energyLeft + "/" + r.memory.containerSources[validTarget.id].energy + ") in distance " + validTarget.distance + " for a return of e/d " + validTarget.ed.toFixed(2) + " (CPU used: " + (Game.cpu.getUsed() - cpuStart).toFixed(2) + ")")
 							}

@@ -431,10 +431,10 @@ Room.prototype.creepSpawnRun =
 			}
 		}
 
-		if (this.checkForDefeat(spawnRoom)) {
+		/* if (this.checkForDefeat(spawnRoom)) {
 			//room has been defeated, no need to spawn anymore
 			return -1;
-		}
+		} */
 
 		if (globalSpawningStatus == 0) {
 			//All spawns busy, inactive or player lost control of the room
@@ -897,8 +897,8 @@ Room.prototype.creepSpawnRun =
 
 		// lorry, Harvester & Repairer
 		minimumSpawnOf["miner"] = numberOfSources;
-		//minimumSpawnOf["harvester"] = numberOfSources - Math.ceil(numberOfMiners / 2) - numberOfSA
-		minimumSpawnOf["harvester"] = numberOfSources - numberOfSA
+		minimumSpawnOf["harvester"] = numberOfSources - Math.ceil(numberOfMiners / 2) - numberOfSA
+		//minimumSpawnOf["harvester"] = numberOfSources - numberOfSA
 
 
 

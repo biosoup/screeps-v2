@@ -190,7 +190,7 @@ class mngColony {
 				this.linksRun()
 
 				//refresh refresh remote containers
-				this.refreshContainerSources(this.homeRoom)
+				this.refreshContainerSources()
 			}
 
 
@@ -333,8 +333,8 @@ class mngColony {
 
 	roomVisuals() {
 		let cpuStart = Game.cpu.getUsed();
-		var rcl = this.controller.level
 		var room = Game.rooms[this.homeRoom]
+		var rcl = room.controller.level
 
 		if (rcl == 0) {
 			//run only in relevant rooms
@@ -360,7 +360,7 @@ class mngColony {
 		}).length
 		var roadDecay = (numberOfRoads * ROAD_DECAY_AMOUNT) / ROAD_DECAY_TIME / REPAIR_POWER //without wearout, non spawm roads only
 
-		var numberOfRamparts = thirooms.find(FIND_STRUCTURES, {
+		var numberOfRamparts = room.find(FIND_STRUCTURES, {
 			filter: (f) => f.structureType == STRUCTURE_RAMPART
 		}).length
 		var rampartsDecay = (numberOfRamparts * RAMPART_DECAY_AMOUNT) / RAMPART_DECAY_TIME / REPAIR_POWER
@@ -833,6 +833,7 @@ class mngColony {
 			return null
 		}
 	}
+
 	linksRun() {
 		let r = this.homeRoom
 		// Link code
@@ -951,8 +952,9 @@ class mngColony {
 			return false;
 		}
 	}
+
 	refreshContainerSources() {
-		r = Game.rooms[this.homeRoom];
+		let r = Game.rooms[this.homeRoom];
 		//get home room storage
 		if (!_.isEmpty(r.storage)) {
 			//get rooms with longDistanceMiners in it
