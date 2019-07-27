@@ -119,7 +119,7 @@ module.exports.loop = function () {
 			if (!_.isEmpty(Game.rooms[roomName].controller)) {
 				//check for hostiles and response force
 				var hostileValues = Game.rooms[roomName].checkForHostiles(roomName);
-				if (!_.isEmpty(hostileValues)) {
+				/* if (!_.isEmpty(hostileValues)) {
 					if (hostileValues.numHostiles > 0) {
 						if (hostileValues.numberOfAttackBodyParts > 0) {
 							var avaliableGuards = _.filter(Game.creeps, (c) => (c.memory.role == 'guard' || c.memory.role == "einarr") && c.memory.target == roomName)
@@ -215,7 +215,7 @@ module.exports.loop = function () {
 							}
 						}
 					}
-				}
+				} */
 
 				/* //add room visuals
 				if (Game.cpu.bucket > CPU_THRESHOLD) {
@@ -339,7 +339,7 @@ module.exports.loop = function () {
 			} */
 		}
 
-		if (CPUdebug == true) {
+		/* if (CPUdebug == true) {
 			CPUdebugString = CPUdebugString.concat("<br>Start stats Code: " + Game.cpu.getUsed())
 		}
 		//other stats
@@ -368,7 +368,7 @@ module.exports.loop = function () {
 			stats.addSimpleStat('creep-population', Object.keys(Game.creeps).length);
 
 			stats.commit();
-		}
+		} */
 
 
 		/* *** TEST SPACE *** */
@@ -380,14 +380,14 @@ module.exports.loop = function () {
 				} */
 			}
 			for (var roomName in Game.rooms) {
-				var powerSpawn = _.first(Game.rooms[roomName].find(FIND_STRUCTURES, {
+				/* var powerSpawn = _.first(Game.rooms[roomName].find(FIND_STRUCTURES, {
 					filter: f => f.structureType == STRUCTURE_POWER_SPAWN
 				}))
 				if (!_.isEmpty(powerSpawn) && (Game.rooms[roomName].storage.store[RESOURCE_ENERGY] > (MINSURPLUSENERGY * Game.rooms[roomName].controller.level)) && Game.cpu.bucket > CPU_THRESHOLD) {
 					if (powerSpawn.energy >= 50 && powerSpawn.power >= 1) {
 						powerSpawn.processPower()
 					}
-				}
+				} */
 			}
 
 		} catch (err) {

@@ -1,5 +1,7 @@
 //empire management code
 
+'use strict';
+
 let tasks = require('tasks');
 let task = require('task');
 var market = require('base.market');
@@ -223,6 +225,113 @@ class mngColony {
 				console.log("ROOM FNC ERR: " + this.homeRoom + " " + err.stack)
 			}
 
+		}
+
+		var powerSpawn = _.first(Game.rooms[this.homeRoom].find(FIND_STRUCTURES, {
+			filter: f => f.structureType == STRUCTURE_POWER_SPAWN
+		}))
+		if (!_.isEmpty(powerSpawn) && (Game.rooms[this.homeRoom].storage.store[RESOURCE_ENERGY] > (MINSURPLUSENERGY * Game.rooms[this.homeRoom].controller.level)) && Game.cpu.bucket > CPU_THRESHOLD) {
+			if (powerSpawn.energy >= 50 && powerSpawn.power >= 1) {
+				powerSpawn.processPower()
+			}
+		}
+
+		if (!_.isEmpty(hostileValues)) {
+			if (hostileValues.numHostiles > 0) {
+				if (hostileValues.numberOfAttackBodyParts > 0) {
+					var avaliableGuards = _.filter(Game.creeps, (c) => (c.memory.role == 'guard' || c.memory.role == "einarr") && c.memory.target == this.homeRoom)
+					if ((Game.time % 3) == 0 && hostileValues.username != "Invader") {
+						console.log("Hostiles in " + this.homeRoom + ": " + hostileValues.username + "! " + hostileValues.numHostiles + " hostile with " + hostileValues.numberOfAttackBodyParts + " ATTACK and " + hostileValues.numberOfHealBodyParts + " HEAL. Response team of: " + avaliableGuards.length)
+					}
+				}
+			}
+
+			if (Game.rooms[this.homeRoom].controller.my) {
+				//check for hostiles
+				if (hostileValues.username != "Invader") {
+					//activate safemode, when non-invaders get too close to spawn
+					var closeRange = 0;
+
+					var closeRangeHostile = Game.rooms[this.homeRoom].spawns[0].pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
+						filter: f => f.owner.username != "Invader"
+					})
+					closeRange = Game.rooms[this.homeRoom].spawns[0].pos.getRangeTo(closeRangeHostile);
+
+
+					//console.log("close range:" + closeRange+" "+closeRangeHostile)
+
+					//if hostile is closer than 6 -> safemode
+					if (closeRange < 6 && closeRange > 0 && Game.rooms[this.homeRoom].controller.safeModeAvailable > 0) {
+						Game.rooms[this.homeRoom].controller.activateSafeMode()
+						console.log("WARNING: Hostile too close!! SAFEMODE!!")
+					} else if (!_.isEmpty(Game.rooms[this.homeRoom].storage)) {
+						if (Game.rooms[this.homeRoom].storage.store[RESOURCE_ENERGY] > 100000) {
+							//we have energy, do siege mode
+							//TODO: implement siege mode
+						} else {
+							//no energy left, ask for help
+
+							//get closest other spawns
+							var flagRoomName = this.homeRoom
+							var distance = {}
+							for (let room in Game.rooms) {
+								var r = Game.rooms[room];
+								if (!_.isEmpty(r.memory.roomArray.spawns)) {
+									if (r.name != flagRoomName) {
+										distance[r.name] = {}
+										distance[r.name].name = r.name
+										distance[r.name].dist = Game.map.getRoomLinearDistance(r.name, flagRoomName);
+									}
+								}
+							}
+							var distanceName = _.first(_.map(_.sortByOrder(distance, ['dist'], ['asc']), _.values))[0];
+
+							//check if flag does not exists
+							var whiteFlags = _.filter(Game.flags, (f) => f.color == COLOR_WHITE && _.words(f.name, /[^-]+/g)[1] == Game.rooms[this.homeRoom].name)
+							if (_.isEmpty(whiteFlags)) {
+								//set a flag
+								Game.rooms[this.homeRoom].createFlag(25, 25, "DEFEND-" + this.homeRoom + "-" + distanceName, COLOR_WHITE, COLOR_YELLOW)
+								console.log(this.homeRoom + " in troubles!! Sending response team!!")
+							}
+						}
+					} else {
+						//no avaliable storage and no safe modes –> send response team
+						if (Game.rooms[this.homeRoom].controller.safeMode == undefined) {
+
+							//get closest other spawns
+							var flagRoomName = this.homeRoom
+							var distance = {}
+							for (let room in Game.rooms) {
+								var r = Game.rooms[room];
+								if (!_.isEmpty(r.memory.roomArray)) {
+									if (!_.isEmpty(r.memory.roomArray.spawns)) {
+										if (r.name != flagRoomName) {
+											distance[r.name] = {}
+											distance[r.name].name = r.name
+											distance[r.name].dist = Game.map.getRoomLinearDistance(r.name, flagRoomName);
+										}
+									}
+								}
+							}
+							if (!_.isEmpty(distance)) {
+								var distanceName = _.first(_.map(_.sortByOrder(distance, ['dist'], ['asc']), _.values))[0];
+
+								//check if flag does not exists
+								var whiteFlags = _.filter(Game.flags, (f) => f.color == COLOR_WHITE && _.words(f.name, /[^-]+/g)[1] == Game.rooms[this.homeRoom].name)
+								if (_.isEmpty(whiteFlags)) {
+									//set a flag
+									Game.rooms[this.homeRoom].createFlag(25, 25, "DEFEND-" + this.homeRoom + "-" + distanceName, COLOR_WHITE, COLOR_YELLOW)
+									console.log(this.homeRoom + " in troubles!! Sending response team!!")
+								}
+							} else {
+								//no room to send help from
+								console.log("No room to send help :(")
+							}
+
+						}
+					}
+				}
+			}
 		}
 	}
 }
