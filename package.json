@@ -9,6 +9,12 @@
     "dependencies": {
         "@types/lodash": "^4.14.134",
         "@types/screeps": "^2.5.4",
+        "grunt-contrib-clean": "^2.0.0",
+        "grunt-contrib-copy": "^1.0.0",
+        "grunt-contrib-watch": "^1.1.0",
+        "grunt-file-append": "0.0.7",
+        "grunt-jsbeautifier": "^0.2.13",
+        "grunt-sync": "^0.8.1",
         "time-grunt": "^2.0.0"
     }
 }
