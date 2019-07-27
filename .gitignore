@@ -2,3 +2,4 @@
 screeps.json
 **/node_modules
 .VSCodeCounter/
+/dist
