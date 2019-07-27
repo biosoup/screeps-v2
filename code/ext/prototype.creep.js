@@ -111,34 +111,32 @@ Creep.prototype.getEnergy = function (creep, useSource) {
 		}
 	}
 
-	//link in body core
+	//get energy from main structures
 	if (!_.isEmpty(creep.room.storage)) {
-		var link = creep.room.storage.pos.findInRange(FIND_STRUCTURES, 2, {
-			filter: s => s.structureType == STRUCTURE_LINK && s.energy == s.energyCapacity
-		})[0];
+		var link = _.first(creep.room.storage.pos.findInRange(FIND_MY_STRUCTURES, 4, {
+			filter: s => s.structureType == STRUCTURE_LINK && (s.energy >= creep.carryCapacity || s.energy == s.energyCapacity)
+		}));
 		if (!_.isEmpty(link)) {
+			//get energy from link
 			creep.task = Tasks.withdraw(link);
 			return;
-		}
-	}
-
-	//get from continer
-	if (_.isEmpty(creep.room.links)) {
-		var containers = creep.room.containers.filter(s => s.store[RESOURCE_ENERGY] >= 1000)
-		if (!_.isEmpty(containers)) {
-			var container = creep.pos.findClosestByRange(containers)
-			if (!_.isEmpty(container)) {
-				creep.task = Tasks.withdraw(container);
+		} else {
+			//link is empty, or nonexistent
+			if (creep.room.storage.store[RESOURCE_ENERGY] > 100) {
+				//get energy from storage
+				creep.task = Tasks.withdraw(creep.room.storage);
 				return true;
+			} else {
+				//storage is empty, get from containers
+				var containers = creep.room.containers.filter(s => s.store[RESOURCE_ENERGY] >= creep.carryCapacity)
+				if (!_.isEmpty(containers)) {
+					var container = creep.pos.findClosestByRange(containers)
+					if (!_.isEmpty(container)) {
+						creep.task = Tasks.withdraw(container);
+						return true;
+					}
+				}
 			}
-		}
-	}
-
-	//get from storage
-	if (!_.isEmpty(creep.room.storage)) {
-		if (creep.room.storage.store[RESOURCE_ENERGY] > 100) {
-			creep.task = Tasks.withdraw(creep.room.storage);
-			return true;
 		}
 	}
 

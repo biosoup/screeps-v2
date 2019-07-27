@@ -1652,7 +1652,8 @@ Room.prototype.creepSpawnRun =
 
 		// lorry, Harvester & Repairer
 		minimumSpawnOf["miner"] = numberOfSources;
-		minimumSpawnOf["harvester"] = numberOfSources - Math.ceil(numberOfMiners / 2) - numberOfSA
+		//minimumSpawnOf["harvester"] = numberOfSources - Math.ceil(numberOfMiners / 2) - numberOfSA
+		minimumSpawnOf["harvester"] = numberOfSources - numberOfSA
 
 
 
@@ -1770,7 +1771,8 @@ Room.prototype.creepSpawnRun =
 
 		//keep at least one guard ready
 		var avaliableGuards = _.filter(allMyCreeps, (c) => c.memory.role == 'guard' && c.memory.target == spawnRoom.name)
-		if (avaliableGuards.length == 0) {
+		var remoteMiners = _.filter(allMyCreeps, (c) => c.memory.role == 'longDistanceMiner' && c.memory.home == spawnRoom.name)
+		if (avaliableGuards.length == 0 && remoteMiners.length > 0) {
 			minimumSpawnOf.guard = 1;
 			guard[spawnRoom.name] = 1;
 		}
@@ -1861,7 +1863,7 @@ Room.prototype.creepSpawnRun =
 				// Iterate through spawns
 				let testSpawn = Game.getObjectById(spawnRoom.memory.roomArray.spawns[s]);
 				if (testSpawn != null && testSpawn.spawning == null && testSpawn.memory.spawnRole != "x") {
-					
+
 					if (false) {
 						var debug = [spawnList, minimumSpawnOf, numberOf]
 						console.log(spawnRoom.name + " " + JSON.stringify(debug) + " *** ticks needed: " + neededTicksToSpawn)
@@ -2022,7 +2024,7 @@ Room.prototype.getSpawnList = function (spawnRoom, minimumSpawnOf, numberOf) {
 		runner: {
 			name: "runner",
 			prio: 15,
-			energyRole: false,
+			energyRole: true,
 			min: minimumSpawnOf.runner,
 			max: numberOf.runner,
 			minEnergy: buildingPlans.runner[rcl - 1].minEnergy

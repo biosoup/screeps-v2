@@ -35,6 +35,13 @@ module.exports = {
 								// harvest source
 								creep.task = Tasks.harvest(source);
 								return;
+							} else {
+								// creep is full, do something usefull
+								var linkCs = _.first(creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 2))
+								if(!_.isEmpty(linkCs)) {
+									creep.task = Tasks.build(linkCs)
+									return
+								}
 							}
 						}
 					} else if (container.store[RESOURCE_ENERGY] < container.storeCapacity) {

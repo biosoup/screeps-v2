@@ -14,11 +14,13 @@ let mngColony = require('manager.colony');
 
 let colonies = {}
 let empire = new mngEmpire()
+console.log(empire.name+" initialized at "+Game.time)
+
 for(let r in Game.rooms) {
 	let room = Game.rooms[r]
 	if(room.controller.my && room.controller.level > 0) {
 		colonies[r] = new mngColony(empire, r)
-		console.log(r+" initialized: "+colonies[r].homeRoom)
+		console.log(r+" initialized at "+Game.time)
 	}
 }
 
