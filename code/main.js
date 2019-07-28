@@ -61,9 +61,9 @@ module.exports.loop = function () {
 				//if creep is idle, give him work
 				if (Game.creeps[creep].isIdle) {
 					Game.creeps[creep].runRole()
-				} else if (!Game.creeps[creep].hasValidTask) {
+				} /* else if (!Game.creeps[creep].hasValidTask) {
 					Game.creeps[creep].runRole()
-				}
+				} */
 			} catch (err) {
 				Game.creeps[creep].say("RUN ROLE ERR!!")
 				console.log("RUN ROLE ERR: " + creep + " at " + err.stack)

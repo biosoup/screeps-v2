@@ -80,7 +80,8 @@ Creep.prototype.getEnergy = function (creep, useSource) {
 	if (hostiles.length == 0) {
 		//look for dropped resources
 		var droppedEnergy = creep.room.find(FIND_DROPPED_RESOURCES, {
-			filter: s => s.targetedBy.length == 0
+			filter: s => s.targetedBy.length == 0 &&
+				((s.resourceType != RESOURCE_ENERGY && s.amount > 0) || (s.resourceType == RESOURCE_ENERGY && s.amount >= 50))
 		})
 		if (!_.isEmpty(droppedEnergy)) {
 			droppedEnergy = creep.pos.findClosestByRange(droppedEnergy)
@@ -131,6 +132,17 @@ Creep.prototype.getEnergy = function (creep, useSource) {
 				var containers = creep.room.containers.filter(s => s.store[RESOURCE_ENERGY] >= creep.carryCapacity)
 				if (!_.isEmpty(containers)) {
 					var container = creep.pos.findClosestByRange(containers)
+					if (!_.isEmpty(container)) {
+						creep.task = Tasks.withdraw(container);
+						return true;
+					}
+				}
+
+				if (creep.memory.role == "runner") {
+					//runners can dry out containers
+					var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+						filter: f => f.structureType == STRUCTURE_CONTAINER && f.store[RESOURCE_ENERGY] > 100
+					})
 					if (!_.isEmpty(container)) {
 						creep.task = Tasks.withdraw(container);
 						return true;

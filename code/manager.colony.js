@@ -850,21 +850,21 @@ class mngColony {
 				coreLinks = r.memory.links["coreLinks"]
 
 				//check if links actually exist
-				for(let sl in sourceLinks) {
-					if(_.isEmpty(Game.getObjectById(sourceLinks[sl]))) {
-						_.pull(sourceLinks, sl)
+				for (let sl in sourceLinks) {
+					if (_.isEmpty(Game.getObjectById(sourceLinks[sl]))) {
+						_.pull(r.memory.links["sourceLinks"], sl)
 					}
 				}
 
-				for(let sl in controllerLinks) {
-					if(_.isEmpty(Game.getObjectById(controllerLinks[sl]))) {
-						_.pull(controllerLinks, sl)
+				for (let sl in controllerLinks) {
+					if (_.isEmpty(Game.getObjectById(controllerLinks[sl]))) {
+						_.pull(r.memory.links["controllerLinks"], sl)
 					}
 				}
 
-				for(let sl in coreLinks) {
-					if(_.isEmpty(Game.getObjectById(coreLinks[sl]))) {
-						_.pull(coreLinks, sl)
+				for (let sl in coreLinks) {
+					if (_.isEmpty(Game.getObjectById(coreLinks[sl]))) {
+						_.pull(r.memory.links["coreLinks"], sl)
 					}
 				}
 
@@ -896,7 +896,7 @@ class mngColony {
 					r.memory.links["controllerLinks"] = controllerLinks
 					r.memory.links["coreLinks"] = coreLinks
 					r.memory.links["number"] = links.length
-				}				
+				}
 
 				//controller balancing
 				if (controllerLinks.length >= 1) {
@@ -906,14 +906,16 @@ class mngColony {
 							//refill controller link
 							for (let sl in sourceLinks) {
 								let sLink = Game.getObjectById(sourceLinks[sl])
-								if (sLink.energy > 100 && sLink.cooldown == 0) {
-									//source link has enough energy
-									let amount = cLink.energyCapacity - cLink.energy
-									if (amount > sLink.energy) amount = sLink.energy;
-									let response = sLink.transferEnergy(cLink, amount)
-									if (response == 0) {
-										console.log("Balancing controller link, sending: " + amount)
-										break
+								if (!_.isEmpty(sLink)) {
+									if (sLink.energy > 100 && sLink.cooldown == 0) {
+										//source link has enough energy
+										let amount = cLink.energyCapacity - cLink.energy
+										if (amount > sLink.energy) amount = sLink.energy;
+										let response = sLink.transferEnergy(cLink, amount)
+										if (response == 0) {
+											//console.log("Balancing controller link, sending: " + amount)
+											break
+										}
 									}
 								}
 							}
@@ -929,14 +931,16 @@ class mngColony {
 							//refill controller link
 							for (let sl in sourceLinks) {
 								let sLink = Game.getObjectById(sourceLinks[sl])
-								if (sLink.energy > 100 && sLink == 0) {
-									//source link has enough energy
-									let amount = bLink.energyCapacity - bLink.energy
-									if (amount > sLink.energy) amount = sLink.energy;
-									let response = sLink.transferEnergy(bLink, amount)
-									if (response == 0) {
-										console.log("Balancing core link, sending: " + amount)
-										break
+								if (!_.isEmpty(sLink)) {
+									if (sLink.energy > 100 && sLink == 0) {
+										//source link has enough energy
+										let amount = bLink.energyCapacity - bLink.energy
+										if (amount > sLink.energy) amount = sLink.energy;
+										let response = sLink.transferEnergy(bLink, amount)
+										if (response == 0) {
+											//console.log("Balancing core link, sending: " + amount)
+											break
+										}
 									}
 								}
 							}

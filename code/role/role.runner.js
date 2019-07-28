@@ -13,6 +13,13 @@ module.exports = {
 		} else if (creep.carry[RESOURCE_ENERGY] > 0) {
 			// creep has energy -> work
 
+			let ext = creep.pos.findInRange(FIND_MY_STRUCTURES, 1, {
+				filter: f => f.structureType == STRUCTURE_EXTENSION && f.energy < f.energy
+			})
+			if (ext.length) {
+				creep.transfer(ext[0], RESOURCE_ENERGY)
+			}
+
 			if (creep.fillStructures(creep, false)) {
 				return;
 			}
