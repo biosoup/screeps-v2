@@ -881,7 +881,7 @@ Room.prototype.creepSpawnRun =
 
 		// runner
 		if (spawnRoom.storage != undefined) {
-			minimumSpawnOf["runner"] = 1;
+			minimumSpawnOf["runner"] = 2;
 
 			//pull back on lorries when storage is overflowing
 			if (_.sum(spawnRoom.storage.store) > 900000) {
