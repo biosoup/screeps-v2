@@ -106,6 +106,15 @@ module.exports = {
 				}
 
 			} else {
+				var containers = creep.room.containers.filter(s => s.store[RESOURCE_ENERGY] >= 100)
+				if (!_.isEmpty(containers)) {
+					var container = creep.pos.findClosestByRange(containers)
+					if (!_.isEmpty(container)) {
+						creep.task = Tasks.withdraw(container);
+						return true;
+					}
+				}
+
 				if (creep.getEnergy(creep, true)) {
 					return;
 				}

@@ -234,7 +234,7 @@ class mngColony {
 			}
 		}
 
-		if (!_.isEmpty(hostileValues)) {
+		/* if (!_.isEmpty(hostileValues)) {
 			if (hostileValues.numHostiles > 0) {
 				if (hostileValues.numberOfAttackBodyParts > 0) {
 					var avaliableGuards = _.filter(Game.creeps, (c) => (c.memory.role == 'guard' || c.memory.role == "einarr") && c.memory.target == this.homeRoom)
@@ -330,7 +330,7 @@ class mngColony {
 					}
 				}
 			}
-		}
+		} */
 	}
 
 	roomVisuals() {
@@ -845,7 +845,30 @@ class mngColony {
 			let controllerLinks = []
 			let coreLinks = []
 			if (!_.isEmpty(r.memory.links)) {
-				//find the place of links
+				controllerLinks = r.memory.links["controllerLinks"]
+				sourceLinks = r.memory.links["sourceLinks"]
+				coreLinks = r.memory.links["coreLinks"]
+
+				//check if links actually exist
+				for(let sl in sourceLinks) {
+					if(_.isEmpty(Game.getObjectById(sourceLinks[sl]))) {
+						_.pull(sourceLinks, sl)
+					}
+				}
+
+				for(let sl in controllerLinks) {
+					if(_.isEmpty(Game.getObjectById(controllerLinks[sl]))) {
+						_.pull(controllerLinks, sl)
+					}
+				}
+
+				for(let sl in coreLinks) {
+					if(_.isEmpty(Game.getObjectById(coreLinks[sl]))) {
+						_.pull(coreLinks, sl)
+					}
+				}
+
+
 				if (links.length >= 2 && r.memory.links.number < links.length && r.memory.links["controllerLinks"].length == 0) {
 					//update links
 					for (let l in links) {
@@ -873,11 +896,7 @@ class mngColony {
 					r.memory.links["controllerLinks"] = controllerLinks
 					r.memory.links["coreLinks"] = coreLinks
 					r.memory.links["number"] = links.length
-				}
-
-				controllerLinks = r.memory.links["controllerLinks"]
-				sourceLinks = r.memory.links["sourceLinks"]
-				coreLinks = r.memory.links["coreLinks"]
+				}				
 
 				//controller balancing
 				if (controllerLinks.length >= 1) {

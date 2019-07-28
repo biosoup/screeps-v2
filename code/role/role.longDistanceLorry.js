@@ -55,7 +55,7 @@ module.exports = {
 							r.memory.containerSources[validTarget.id].valid = false
 							energyLeft = (validTarget.energy + (validTarget.distance * 10)) - creep.carryCapacity
 
-							if (true) {
+							if (false) {
 								console.log(creep.name + " going for " + container.id + " in " + container.room.name + " with " + container.store[RESOURCE_ENERGY] +
 									"(" + energyLeft + "/" + r.memory.containerSources[validTarget.id].energy + ") in distance " + validTarget.distance + " for a return of e/d " + validTarget.ed.toFixed(2) + " (CPU used: " + (Game.cpu.getUsed() - cpuStart).toFixed(2) + ")")
 							}
