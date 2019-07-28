@@ -848,28 +848,32 @@ class mngColony {
 				controllerLinks = r.memory.links["controllerLinks"]
 				sourceLinks = r.memory.links["sourceLinks"]
 				coreLinks = r.memory.links["coreLinks"]
+				let redo = false
 
 				//check if links actually exist
 				for (let sl in sourceLinks) {
 					if (_.isEmpty(Game.getObjectById(sourceLinks[sl]))) {
 						_.pull(r.memory.links["sourceLinks"], sl)
+						redo = true
 					}
 				}
 
 				for (let sl in controllerLinks) {
 					if (_.isEmpty(Game.getObjectById(controllerLinks[sl]))) {
 						_.pull(r.memory.links["controllerLinks"], sl)
+						redo = true
 					}
 				}
 
 				for (let sl in coreLinks) {
 					if (_.isEmpty(Game.getObjectById(coreLinks[sl]))) {
 						_.pull(r.memory.links["coreLinks"], sl)
+						redo = true
 					}
 				}
 
 
-				if (links.length >= 2 && r.memory.links.number < links.length && r.memory.links["controllerLinks"].length == 0) {
+				if (links.length >= 2 && r.memory.links.number < links.length && r.memory.links["controllerLinks"].length == 0 || redo == true) {
 					//update links
 					for (let l in links) {
 						let nearSource = links[l].pos.findInRange(FIND_SOURCES, 3)
@@ -899,7 +903,7 @@ class mngColony {
 				}
 
 				//controller balancing
-				if (controllerLinks.length >= 1) {
+				if (controllerLinks.length > 0) {
 					for (let cl in controllerLinks) {
 						let cLink = Game.getObjectById(controllerLinks[cl])
 						if (cLink.energy < (cLink.energyCapacity - 100)) {
@@ -924,7 +928,7 @@ class mngColony {
 				}
 
 				//core balancing
-				if (coreLinks.length >= 1) {
+				if (coreLinks.length > 0) {
 					for (let bl in coreLinks) {
 						let bLink = Game.getObjectById(coreLinks[bl])
 						if (bLink.energy < (bLink.energyCapacity - 100)) {
