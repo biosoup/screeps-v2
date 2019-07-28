@@ -29,6 +29,20 @@ module.exports = {
 
 			//FIXME: do not go near hostiles!
 
+			var containers = creep.room.containers.filter(s => s.store[RESOURCE_ENERGY] == s.storeCapacity)
+			if (!_.isEmpty(containers)) {
+				for(let c in containers) {
+					var linkNearby = containers[c].pos.findInRange(FIND_MY_STRUCTURES, 2, {filter: f=> f.structureType == STRUCTURE_LINK})
+					if(linkNearby.length == 0) {
+						var container = creep.pos.findClosestByRange(containers)
+					}
+				}
+				if (!_.isEmpty(container)) {
+					creep.task = Tasks.withdraw(container);
+					return true;
+				}
+			}
+
 			//get energy
 			if (creep.getEnergy(creep, false)) {
 				return;
