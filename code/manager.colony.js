@@ -872,9 +872,16 @@ class mngColony {
 					}
 				}
 
+				if (controllerLinks.length > 1) redo = true
+				if (sourceLinks.length > 2) redo = true
+				if (coreLinks.length > 1) redo = true
+
 
 				if (links.length >= 2 && r.memory.links.number < links.length && r.memory.links["controllerLinks"].length == 0 || redo == true) {
 					//update links
+					controllerLinks = []
+					sourceLinks = []
+					coreLinks = []
 					for (let l in links) {
 						let nearSource = links[l].pos.findInRange(FIND_SOURCES, 3)
 						if (nearSource.length > 0) {
@@ -907,6 +914,7 @@ class mngColony {
 					for (let cl in controllerLinks) {
 						let cLink = Game.getObjectById(controllerLinks[cl])
 						if (!_.isEmpty(cLink)) {
+							console.log(this._homeRoom + " " + cLink.id + " " + controllerLinks.length + " " + controllerLinks[cl])
 							if (cLink.energy < (cLink.energyCapacity - 100)) {
 								//refill controller link
 								for (let sl in sourceLinks) {
