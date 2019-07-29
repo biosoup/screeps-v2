@@ -1055,7 +1055,7 @@ Room.prototype.creepSpawnRun =
 				var freeSpots = 0
 				for (var s of sources) {
 					//check how many free space each has
-					var freeSpaces = spawnRoom.lookForAtArea(LOOK_TERRAIN, s.pos.y - 1, s.pos.x - 1, s.pos.y + 1, s.pos.x + 1, true);
+					var freeSpaces = spawnRoom.lookForAtArea(LOOK_TERRAIN, sources[s].pos.y - 1, sources[s].pos.x - 1, sources[s].pos.y + 1, sources[s].pos.x + 1, true);
 					freeSpaces = freeSpaces.filter(f => f.terrain == "wall")
 					freeSpots = freeSpots + (9 - freeSpaces.length)
 				}

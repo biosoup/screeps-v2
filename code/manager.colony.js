@@ -913,27 +913,26 @@ class mngColony {
 				if (controllerLinks.length > 0) {
 					for (let cl in controllerLinks) {
 						let cLink = Game.getObjectById(controllerLinks[cl])
-						if (!_.isEmpty(cLink)) {
-							console.log(this._homeRoom + " " + cLink.id + " " + controllerLinks.length + " " + controllerLinks[cl])
-							if (cLink.energy < (cLink.energyCapacity - 100)) {
-								//refill controller link
-								for (let sl in sourceLinks) {
-									let sLink = Game.getObjectById(sourceLinks[sl])
-									if (!_.isEmpty(sLink)) {
-										if (sLink.energy > 100 && sLink.cooldown == 0) {
-											//source link has enough energy
-											let amount = cLink.energyCapacity - cLink.energy
-											if (amount > sLink.energy) amount = sLink.energy;
-											let response = sLink.transferEnergy(cLink, amount)
-											if (response == 0) {
-												//console.log("Balancing controller link, sending: " + amount)
-												break
-											}
-										}
+						if (_.isEmpty(cLink)) continue
+						if (cLink.energy < (cLink.energyCapacity - 100)) {
+							//refill controller link
+							for (let sl in sourceLinks) {
+								let sLink = Game.getObjectById(sourceLinks[sl])
+								if (_.isEmpty(sLink)) continue
+								if (sLink.energy > 100 && sLink.cooldown == 0) {
+									//source link has enough energy
+									let amount = cLink.energyCapacity - cLink.energy
+									if (amount > sLink.energy) amount = sLink.energy;
+									let response = sLink.transferEnergy(cLink, amount)
+									if (response == 0) {
+										//console.log("Balancing controller link, sending: " + amount)
+										break
 									}
 								}
+
 							}
 						}
+
 					}
 				}
 
@@ -941,26 +940,26 @@ class mngColony {
 				if (coreLinks.length > 0) {
 					for (let bl in coreLinks) {
 						let bLink = Game.getObjectById(coreLinks[bl])
-						if (!_.isEmpty(bLink)) {
-							if (bLink.energy < (bLink.energyCapacity - 100)) {
-								//refill controller link
-								for (let sl in sourceLinks) {
-									let sLink = Game.getObjectById(sourceLinks[sl])
-									if (!_.isEmpty(sLink)) {
-										if (sLink.energy > 100 && sLink == 0) {
-											//source link has enough energy
-											let amount = bLink.energyCapacity - bLink.energy
-											if (amount > sLink.energy) amount = sLink.energy;
-											let response = sLink.transferEnergy(bLink, amount)
-											if (response == 0) {
-												//console.log("Balancing core link, sending: " + amount)
-												break
-											}
-										}
+						if (_.isEmpty(bLink)) continue
+						if (bLink.energy < (bLink.energyCapacity - 100)) {
+							//refill controller link
+							for (let sl in sourceLinks) {
+								let sLink = Game.getObjectById(sourceLinks[sl])
+								if (_.isEmpty(sLink)) continue
+								if (sLink.energy > 100 && sLink == 0) {
+									//source link has enough energy
+									let amount = bLink.energyCapacity - bLink.energy
+									if (amount > sLink.energy) amount = sLink.energy;
+									let response = sLink.transferEnergy(bLink, amount)
+									if (response == 0) {
+										//console.log("Balancing core link, sending: " + amount)
+										break
 									}
 								}
+
 							}
 						}
+
 					}
 				}
 			} else {

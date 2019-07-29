@@ -18,6 +18,7 @@ console.log(empire.name+" initialized at "+Game.time)
 
 for(let r in Game.rooms) {
 	let room = Game.rooms[r]
+	if(_.isEmpty(room.controller)) continue
 	if(room.controller.my && room.controller.level > 0) {
 		colonies[r] = new mngColony(empire, r)
 		console.log(r+" initialized at "+Game.time)

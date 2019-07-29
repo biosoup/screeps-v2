@@ -66,8 +66,8 @@ module.exports = {
 								creep.memory.buildRoadCounter = 0
 							}
 							creep.memory.buildRoadCounter++
-							
-							
+
+
 							return;
 						} else {
 							//if there is a free space in container
@@ -95,6 +95,62 @@ module.exports = {
 						creep.task = Tasks.harvest(source);
 						return
 					} else {
+						//find construction sites for contianer
+						var miningSources = creep.room.find(FIND_SOURCES)
+						for (let s in miningSources) {
+							var cBuildSite = miningSources[s].pos.findInRange(FIND_CONSTRUCTION_SITES, 1, {
+								filter: f => f.structureType == STRUCTURE_CONTAINER
+							})
+							if (!_.isEmpty(cBuildSite)) continue
+
+							var cCdSite = miningSources[s].pos.findInRange(FIND_STRUCTURES, 1, {
+								filter: f => f.structureType == STRUCTURE_CONTAINER
+							})
+							if (!_.isEmpty(cCdSite)) continue
+
+							//no construction site
+							let goal = {}
+							goal.pos = miningSources[s].pos
+							goal.range = 1
+
+							let ret = PathFinder.search(
+								Game.rooms[creep.memory.home].storage.pos, goal, {
+									roomCallback: function (roomName) {
+										let room = Game.rooms[roomName];
+										if (!room) return;
+										let costs = new PathFinder.CostMatrix;
+										room.find(FIND_STRUCTURES).forEach(function (struct) {
+											if (struct.structureType === STRUCTURE_ROAD) {
+												// Favor roads over plain tiles
+												costs.set(struct.pos.x, struct.pos.y, 1);
+											} else if (struct.structureType !== STRUCTURE_CONTAINER &&
+												(struct.structureType !== STRUCTURE_RAMPART ||
+													!struct.my)) {
+												// Can't walk through non-walkable buildings
+												costs.set(struct.pos.x, struct.pos.y, 0xff);
+											}
+										});
+										return costs;
+									},
+									maxOps: 5000
+								}
+							);
+							let pos = ret.path[ret.path.length - 1];
+							console.log(JSON.stringify(pos) + " " + ret.incomplete+" "+ret.ops)
+							if (ret.incomplete == false) {
+								let containerThere = pos.lookFor(LOOK_STRUCTURES)
+								if (!_.isEmpty(containerThere)) continue
+								let csThere = pos.lookFor(LOOK_CONSTRUCTION_SITES)
+								if (!_.isEmpty(csThere)) continue
+								pos.createConstructionSite(STRUCTURE_CONTAINER)
+
+							} else {
+								console.log(JSON.stringify(goal))
+								console.log(creep.room.name + " " + ret.incomplete + " " + ret.path.length + " " + pos.x + " " + pos.y + " " + pos.roomName)
+							}
+
+						}
+
 						//go build stuff?
 						var buildSite = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
 						if (!_.isEmpty(buildSite)) {
