@@ -139,7 +139,15 @@ Creep.prototype.getEnergy = function (creep, useSource) {
 				}
 
 				if (creep.memory.role == "runner") {
-					//runners can dry out containers
+					//runners can dry out containers and terminal
+					var terminal = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+						filter: f => f.structureType == STRUCTURE_TERMINAL && f.store[RESOURCE_ENERGY] > 100
+					})
+					if (!_.isEmpty(terminal)) {
+						creep.task = Tasks.withdraw(terminal);
+						return true;
+					}
+					
 					var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
 						filter: f => f.structureType == STRUCTURE_CONTAINER && f.store[RESOURCE_ENERGY] > 100
 					})
