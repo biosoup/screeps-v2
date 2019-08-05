@@ -4,6 +4,12 @@
 'use strict';
 var AsciiTable = require('tools.ascii-table')
 
+
+global.playerUsername = "biosoup";
+global.roomSign = "Not fully automated, yet!"
+global.allies = [];
+global.myRooms = {};
+
 /* eslint-disable no-magic-numbers, no-undef */
 
 global.WHOAMI = (_.find(Game.structures) || _.find(Game.creeps)).owner.username;
@@ -426,7 +432,7 @@ global.WALLMAX = 10000000;
 global.MINSURPLUSENERGY = 50000; //multiplied by RCL to get storage energy stresholds
 global.LOG_TERMINAL = false;
 global.LOG_MARKET = true;
-global.LOG_SPAWN = false;
+global.LOG_SPAWN = true;
 global.LOG_EXPIRE = true;
 global.LOG_PANICFLAG = true;
 global.LOG_INFO = true;

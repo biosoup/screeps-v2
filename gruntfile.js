@@ -1,4 +1,4 @@
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     require('time-grunt')(grunt);
 
     // Pull defaults (including username and password) from .screeps.json
@@ -22,7 +22,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-file-append');
-    grunt.loadNpmTasks("grunt-jsbeautifier");
     grunt.loadNpmTasks("grunt-sync");
 
     grunt.initConfig({
@@ -75,6 +74,32 @@ module.exports = function (grunt) {
                     ptr: ptr
                 },
                 src: ['dist/*.js']
+            },
+            prtest: {
+                options: {
+                    server: {
+                        host: 'prtest.screepspl.us',
+                        http: false
+                    },
+                    email: username,
+                    password: password,
+                    branch: branch,
+                    ptr: ptr
+                },
+                src: ['dist/*.js']
+            },
+            test: {
+                options: {
+                    server: {
+                        host: '192.168.0.106',
+                        http: false
+                    },
+                    email: username,
+                    password: password,
+                    branch: branch,
+                    ptr: ptr
+                },
+                src: ['dist/*.js']
             }
         },
 
@@ -89,7 +114,7 @@ module.exports = function (grunt) {
                     src: '**/*.js',
                     dest: 'dist/',
                     filter: 'isFile',
-                    rename: function (dest, src) {
+                    rename: function(dest, src) {
                         return dest + src.replace(/\//g, '.');
                     }
                 }],
@@ -126,23 +151,6 @@ module.exports = function (grunt) {
         /** Remove all files from the dist folder. */
         clean: {
             'dist': ['dist']
-        },
-
-        /** Apply code styling */
-        jsbeautifier: {
-            modify: {
-                src: ["code/**/*.js"],
-                options: {
-                    config: '.jsbeautifyrc'
-                }
-            },
-            verify: {
-                src: ["code/**/*.js"],
-                options: {
-                    mode: 'VERIFY_ONLY',
-                    config: '.jsbeautifyrc'
-                }
-            }
         }
 
     });
@@ -153,9 +161,9 @@ module.exports = function (grunt) {
     grunt.registerTask('mmo', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps:mmo']);
     grunt.registerTask('s2', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps:s2']);
     grunt.registerTask('s1', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps:s1']);
+    grunt.registerTask('prtest', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps:prtest']);
+    grunt.registerTask('test', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps:test']);
     grunt.registerTask('all', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps:mmo', 'screeps:s2', 'screeps:s1', 'sync:private']);
-    grunt.registerTask('test', ['jsbeautifier:verify']);
-    grunt.registerTask('pretty', ['jsbeautifier:modify']);
 
     /* grunt.registerTask('default', ['screeps:mmo', 'screeps:s2']);
     grunt.registerTask('mmo', ['screeps:mmo']);
