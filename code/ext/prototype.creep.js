@@ -160,6 +160,15 @@ Creep.prototype.getEnergy = function(creep, useSource) {
         }
     }
 
+    var containers = creep.room.containers.filter(s => s.store[RESOURCE_ENERGY] >= creep.carryCapacity)
+    if (!_.isEmpty(containers)) {
+        var container = creep.pos.findClosestByRange(containers)
+        if (!_.isEmpty(container)) {
+            creep.task = Tasks.withdraw(container);
+            return true;
+        }
+    }
+
     // if no container was found and the Creep should look for Sources
     if (useSource) {
         let sourceNext = creep.pos.findInRange(FIND_SOURCES, 1)

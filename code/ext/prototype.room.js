@@ -1069,7 +1069,7 @@ Room.prototype.creepSpawnRun =
             }
         }
 
-        if (rcl <= 2 && spawnRoom.energyCapacity > 300) {
+        if (rcl <= 4 && spawnRoom.energyCapacity > 300) {
             minimumSpawnOf.runner = 1
         }
 
@@ -1284,7 +1284,7 @@ Room.prototype.getSpawnList = function(spawnRoom, minimumSpawnOf, numberOf) {
         },
         builder: {
             name: "builder",
-            prio: 11,
+            prio: 17,
             energyRole: false,
             min: minimumSpawnOf.builder,
             max: numberOf.builder,
