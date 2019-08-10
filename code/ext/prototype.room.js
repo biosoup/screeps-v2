@@ -474,6 +474,7 @@ Room.prototype.creepSpawnRun =
 
         //room interests
         let roomInterests = {}
+        var newSpawn = false
 
         // REMOTE HARVEST
         var redFlags = _.filter(Game.flags, (f) => f.color == COLOR_RED && _.last(_.words(f.name, /[^-]+/g)) == spawnRoom.name)
@@ -585,13 +586,15 @@ Room.prototype.creepSpawnRun =
             var gcl = Game.gcl.level;
             var numberOfRooms = _.sum(Game.rooms, room => room.controller && room.controller.my)
             var greyFlags = _.filter(Game.flags, (f) => f.color == COLOR_GREY && _.last(_.words(f.name, /[^-]+/g)) == spawnRoom.name)
+            //FIXME: works only when gcl is one higher
             if (gcl > numberOfRooms) {
                 if (!_.isEmpty(greyFlags)) {
                     for (var flag of greyFlags) {
                         //roomInterests.room = [harvesters, sources/miners, lorries, builders, claimers, guards]
                         //builders & guard = boolean
-                        roomInterests[flag.pos.roomName] = [0, 0, 0, flag.secondaryColor, 1, 1]
+                        roomInterests[flag.pos.roomName] = [0, 0, 0, flag.secondaryColor, 1, 1] //maybe at least 4 builders to build the spawn in their lifetime
                         var newRoom = flag.pos.roomName;
+                        var newSpawn = true
                     }
                 }
             } else {
@@ -1046,7 +1049,7 @@ Room.prototype.creepSpawnRun =
         	- fixed numbers for now
         */
 
-        if (rcl <= 3) {
+        if (_.isEmpty(spawnRoom.storage) && rcl < 4) {
             /* minimumSpawnOf.guard += 1
             guard[spawnRoom.name] += 1 */
 
@@ -1055,12 +1058,12 @@ Room.prototype.creepSpawnRun =
                 var freeSpots = 0
                 for (var s of sources) {
                     //check how many free space each has
-                    if (_.isEmpty(sources[s])) continue
-                    var freeSpaces = spawnRoom.lookForAtArea(LOOK_TERRAIN, sources[s].pos.y - 1, sources[s].pos.x - 1, sources[s].pos.y + 1, sources[s].pos.x + 1, true);
+                    if (_.isEmpty(s)) continue
+                    var freeSpaces = spawnRoom.lookForAtArea(LOOK_TERRAIN, s.pos.y - 1, s.pos.x - 1, s.pos.y + 1, s.pos.x + 1, true);
                     freeSpaces = freeSpaces.filter(f => f.terrain == "wall")
                     freeSpots = freeSpots + (9 - freeSpaces.length)
                 }
-                minimumSpawnOf.harvester = freeSpots * 2;
+                minimumSpawnOf.harvester = freeSpots;
                 if (minimumSpawnOf.harvester > 10) {
                     minimumSpawnOf.harvester = 10
                 }
@@ -1074,9 +1077,9 @@ Room.prototype.creepSpawnRun =
         }
 
         //we can claim new room, pause upgraders
-        if (!_.isEmpty(newRoom)) {
-            minimumSpawnOf.upgrader = 0
+        if (newSpawn == true) {
             minimumSpawnOf.longDistanceMiner = 0
+            minimumSpawnOf.longDistanceHarvester = 0
             minimumSpawnOf.longDistanceLorry = 0
         }
 

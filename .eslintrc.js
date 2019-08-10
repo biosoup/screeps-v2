@@ -19,6 +19,6 @@ module.exports = {
     },
     "rules": {
         "no-undef": "warn",
-        "no-redeclare": "warn"
+        "no-redeclare": "off"
     }
 };
