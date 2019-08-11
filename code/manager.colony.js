@@ -53,8 +53,8 @@ class mngColony {
 	 * @return {Object}
 	 */
 	get memory() {
-		if (Memory.empire === undefined) Memory.empire = {};
-		return Memory.empire;
+		if (Memory.colony === undefined) Memory.colony = {};
+		return Memory.colony;
 	}
 
 	addTask(task) {

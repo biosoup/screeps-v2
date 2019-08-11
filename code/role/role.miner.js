@@ -37,6 +37,13 @@ module.exports = {
                                 return;
                             } else {
                                 // creep is full, do something usefull
+                                var extensions = _.first(creep.pos.findInRange(FIND_MY_STRUCTURES, 1, {
+                                    filter: f => f.structureType == STRUCTURE_EXTENSION && f.energy < f.energyCapacity
+                                }))
+                                if (!_.isEmpty(extensions)) {
+                                    creep.transfer(extensions)
+                                }
+
                                 var linkCs = _.first(creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 2))
                                 if (!_.isEmpty(linkCs)) {
                                     creep.task = Tasks.build(linkCs)
@@ -79,7 +86,7 @@ module.exports = {
                             return
                         }
                     } else {
-						//find container construction sites
+                        //find container construction sites
                         var buildSite = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {
                             filter: f => f.structureType == STRUCTURE_CONTAINER
                         });

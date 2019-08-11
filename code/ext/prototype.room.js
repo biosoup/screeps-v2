@@ -131,7 +131,7 @@ Room.prototype.refreshData =
             Game.rooms[r].memory.roomArray = {};
         }
 
-        //FIXME: add postion to IDs as well
+        //FIXME: add position to IDs as well
 
         var searchResult;
         if (roomCreeps > 0 || (Game.rooms[r].controller != undefined &&
@@ -884,7 +884,7 @@ Room.prototype.creepSpawnRun =
 
         // runner
         if (spawnRoom.storage != undefined) {
-            minimumSpawnOf["runner"] = 2;
+            minimumSpawnOf["runner"] = 1;
 
             //pull back on lorries when storage is overflowing
             if (_.sum(spawnRoom.storage.store) > 900000) {
@@ -1114,8 +1114,8 @@ Room.prototype.creepSpawnRun =
                 if (testSpawn != null && testSpawn.spawning == null && testSpawn.memory.spawnRole != "x") {
 
                     if (false) {
-                        var debug = [spawnList, minimumSpawnOf, numberOf]
-                        console.log(spawnRoom.name + " " + JSON.stringify(debug) + " *** ticks needed: " + neededTicksToSpawn)
+                        var debug = JSON.stringify(spawnList)+"<br> "+JSON.stringify(minimumSpawnOf)+"<br>"+JSON.stringify(numberOf)
+                        console.log(spawnRoom.name + " " + debug + " *** ticks needed: " + neededTicksToSpawn)
                     }
 
                     // Spawn!
@@ -1359,7 +1359,7 @@ Room.prototype.getSpawnList = function(spawnRoom, minimumSpawnOf, numberOf) {
         },
         claimer: {
             name: "claimer",
-            prio: 145,
+            prio: 125,
             energyRole: false,
             min: minimumSpawnOf.claimer,
             max: numberOf.claimer,
@@ -1399,7 +1399,7 @@ Room.prototype.getSpawnList = function(spawnRoom, minimumSpawnOf, numberOf) {
         },
         longDistanceBuilder: {
             name: "longDistanceBuilder",
-            prio: 70,
+            prio: 130,
             energyRole: true,
             min: minimumSpawnOf.longDistanceBuilder,
             max: numberOf.longDistanceBuilder,

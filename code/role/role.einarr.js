@@ -63,29 +63,25 @@ module.exports = {
 						});
 					}
 				}
-				console.log(JSON.stringify(creep.memory.travelData))
+				//console.log(JSON.stringify(creep.memory.travelData))
 				creep.say("Hostile!" + EM_SWORDS, true);
 				return;
 			} else {
 				//find enemy structures
-				var hostile = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
+				var hostileStrutucture = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
 					filter: f => f.structureType != STRUCTURE_CONTROLLER
 				})
-				if (!_.isEmpty(hostile)) {
+				if (!_.isEmpty(hostileStrutucture)) {
 					//get in for the kill
-					creep.task = Tasks.attack(hostile, {
-						movingTarget: true
-					})
+					creep.task = Tasks.attack(hostileStrutucture)
 					creep.say("Hostile!" + EM_SWORDS, true);
 					return;
 				}
 
-				var hostile = creep.pos.findClosestByRange(FIND_HOSTILE_CONSTRUCTION_SITES)
-				if (!_.isEmpty(hostile)) {
+				var hostileCs = creep.pos.findClosestByRange(FIND_HOSTILE_CONSTRUCTION_SITES)
+				if (!_.isEmpty(hostileCs)) {
 					//get in for the kill
-					creep.travelTo(hostile, {
-						movingTarget: true
-					});
+					creep.travelTo(hostileCs);
 					creep.say("Hostile!" + EM_SWORDS, true);
 					return;
 				}

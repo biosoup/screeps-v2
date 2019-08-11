@@ -241,7 +241,7 @@ Creep.prototype.fillStructures = function(creep, workpart = false) {
     }
 
     var extensions = creep.room.extensions.filter(s => s.energy < s.energyCapacity && s.targetedBy.length == 0)
-    var structure = creep.pos.findClosestByRange(extensions)
+    var structure = creep.pos.findClosestByPath(extensions)
     if (!_.isEmpty(structure)) {
         creep.task = Tasks.transfer(structure);
         return true;
