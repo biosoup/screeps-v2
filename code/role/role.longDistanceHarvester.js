@@ -27,6 +27,17 @@ module.exports = {
 					return;
 				} else {
 					//nothing to do -> upgrade controller
+					//find important buidlsites
+					var closestImportantConstructionSite = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {
+						filter: (s) => s.structureType == STRUCTURE_CONTAINER ||
+							s.structureType == STRUCTURE_EXTENSION
+					});
+					if (!_.isEmpty(closestImportantConstructionSite)) {
+						creep.task = Tasks.build(closestImportantConstructionSite);
+						creep.say(EM_BUILD + " " + EM_EXCLAMATION, true);
+						return;
+					}
+
 					if (creep.room.controller.my) {
 						creep.task = Tasks.upgrade(creep.room.controller);
 						creep.say(EM_LIGHTNING, true);

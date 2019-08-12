@@ -590,11 +590,26 @@ Room.prototype.creepSpawnRun =
             if (gcl > numberOfRooms) {
                 if (!_.isEmpty(greyFlags)) {
                     for (var flag of greyFlags) {
-                        //roomInterests.room = [harvesters, sources/miners, lorries, builders, claimers, guards]
-                        //builders & guard = boolean
-                        roomInterests[flag.pos.roomName] = [0, 0, 0, flag.secondaryColor, 1, 1] //maybe at least 4 builders to build the spawn in their lifetime
-                        var newRoom = flag.pos.roomName;
-                        var newSpawn = true
+                        if (!_.isEmpty(Game.rooms[flag.pos.roomName])) {
+                            if (Game.rooms[flag.pos.roomName].controller.level > 1) {
+                                var spawnExists = Game.rooms[flag.pos.roomName].spawns
+                                if (spawnExists.length == 0) {
+                                    roomInterests[flag.pos.roomName] = [0, 0, 0, flag.secondaryColor, 0, 1]
+                                    var newRoom = flag.pos.roomName;
+                                    console.log(flag.pos.roomName + " Need rebuilding!!")
+                                    var newSpawn = true
+                                } else {
+                                    //remove flag
+                                    flag.remove()
+                                }
+                            }
+                        } else {
+                            //roomInterests.room = [harvesters, sources/miners, lorries, builders, claimers, guards]
+                            //builders & guard = boolean
+                            roomInterests[flag.pos.roomName] = [0, 0, 0, flag.secondaryColor, 1, 1] //maybe at least 4 builders to build the spawn in their lifetime
+                            var newRoom = flag.pos.roomName;
+                            var newSpawn = true
+                        }
                     }
                 }
             } else {
@@ -694,6 +709,7 @@ Room.prototype.creepSpawnRun =
                 //code moved somewhere else :)
 
                 //minimumSpawnOf.longDistanceLorry += roomInterests[interest][2];
+
             }
             if (roomInterests[interest][3] > 0) {
                 var inRooms = _.sum(allMyCreeps, (c) => c.memory.role == 'longDistanceBuilder' && c.memory.target == interest)
@@ -725,7 +741,7 @@ Room.prototype.creepSpawnRun =
                         longDistanceBuilder[interest] = roomInterests[interest][3]
                     }
 
-                    //console.log(interest + " " + newRoom + " " + roomInterests[interest][3] + " " + minimumSpawnOf.longDistanceBuilder)
+                    //console.log(interest + " " + newRoom + " " + roomInterests[interest][3] + " " + minimumSpawnOf.longDistanceBuilder+" "+inRooms+" "+longDistanceBuilder[interest])
                 } else {
                     //no vision into the room
                     if (interest == newRoom) {
@@ -734,6 +750,7 @@ Room.prototype.creepSpawnRun =
                             longDistanceBuilder[interest] = roomInterests[interest][3]
                         }
                     }
+                    //console.log(interest + " " + newRoom + " " + roomInterests[interest][3] + " " + minimumSpawnOf.longDistanceBuilder+" "+inRooms)
                 }
             }
             if (roomInterests[interest][4] > 0) {
@@ -813,9 +830,9 @@ Room.prototype.creepSpawnRun =
             }
         }
 
-        /* if (minimumSpawnOf.guard > 0) {
-        	var inRooms = _.sum(allMyCreeps, (c) => c.memory.role == 'guard' && c.memory.home == spawnRoom.name)
-        	console.log("Enemy! " + inRooms + " guards from " + spawnRoom.name + " " + JSON.stringify(guard) + " " + minimumSpawnOf.guard)
+        /* if (minimumSpawnOf.longDistanceBuilder > 0) {
+            var inRooms = _.sum(allMyCreeps, (c) => c.memory.role == 'longDistanceBuilder' && c.memory.home == spawnRoom.name)
+            console.log("DEBUG: " + inRooms + " longDistanceBuilder from " + spawnRoom.name + " " + JSON.stringify(longDistanceBuilder) + " " + minimumSpawnOf.longDistanceBuilder)
         } */
 
         /**Spawning volumes scaling with # of sources in room**/
@@ -1078,6 +1095,7 @@ Room.prototype.creepSpawnRun =
 
         //we can claim new room, pause upgraders
         if (newSpawn == true) {
+            //minimumSpawnOf.upgrader = 0
             minimumSpawnOf.longDistanceMiner = 0
             minimumSpawnOf.longDistanceHarvester = 0
             minimumSpawnOf.longDistanceLorry = 0
@@ -1114,7 +1132,7 @@ Room.prototype.creepSpawnRun =
                 if (testSpawn != null && testSpawn.spawning == null && testSpawn.memory.spawnRole != "x") {
 
                     if (false) {
-                        var debug = JSON.stringify(spawnList)+"<br> "+JSON.stringify(minimumSpawnOf)+"<br>"+JSON.stringify(numberOf)
+                        var debug = JSON.stringify(spawnList) + "<br> " + JSON.stringify(minimumSpawnOf) + "<br>" + JSON.stringify(numberOf)
                         console.log(spawnRoom.name + " " + debug + " *** ticks needed: " + neededTicksToSpawn)
                     }
 
@@ -1220,6 +1238,9 @@ Room.prototype.creepSpawnRun =
                             name = testSpawn.createCustomCreep(energy, spawnList[spawnEntry], spawnRoom.name, roomName);
                         }
                     } else if (spawnList[spawnEntry] == "longDistanceBuilder") {
+                        if (_.isEmpty(longDistanceBuilder)) {
+                            console.log("ERR spawning a LDB!! in " + spawnRoom.name + " " + JSON.stringify(minimumSpawnOf.longDistanceBuilder))
+                        }
                         for (var roomName in longDistanceBuilder) {
                             name = testSpawn.createCustomCreep(energy, spawnList[spawnEntry], spawnRoom.name, roomName);
                         }
