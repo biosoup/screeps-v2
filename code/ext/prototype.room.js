@@ -917,7 +917,7 @@ Room.prototype.creepSpawnRun =
 
         // lorry, Harvester & Repairer
         minimumSpawnOf["miner"] = numberOfSources;
-        minimumSpawnOf["harvester"] = numberOfSources - Math.ceil(numberOfMiners / 2) - numberOfSA
+        minimumSpawnOf["harvester"] = numberOfSources - numberOfMiners - numberOfSA
         //minimumSpawnOf["harvester"] = numberOfSources - numberOfSA
 
 
@@ -1092,6 +1092,9 @@ Room.prototype.creepSpawnRun =
         if (rcl <= 4 && spawnRoom.energyCapacity > 300) {
             minimumSpawnOf.runner = 1
         }
+        if (rcl == 8) {
+            minimumSpawnOf.runner = 2
+        }
 
         //we can claim new room, pause upgraders
         if (newSpawn == true) {
@@ -1240,6 +1243,11 @@ Room.prototype.creepSpawnRun =
                     } else if (spawnList[spawnEntry] == "longDistanceBuilder") {
                         if (_.isEmpty(longDistanceBuilder)) {
                             console.log("ERR spawning a LDB!! in " + spawnRoom.name + " " + JSON.stringify(minimumSpawnOf.longDistanceBuilder))
+                            let roombuidl = _.first(_.filter(Game.rooms, (f) => f.controller.level < 3 && f.energyAvailable < 300))
+                            if (!_.isEmpty(roombuidl)) {
+                                console.log(JSON.stringify(roombuidl))
+                                longDistanceBuilder[roombuidl.name] = 1
+                            }
                         }
                         for (var roomName in longDistanceBuilder) {
                             name = testSpawn.createCustomCreep(energy, spawnList[spawnEntry], spawnRoom.name, roomName);

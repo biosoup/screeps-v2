@@ -5,6 +5,7 @@
 let tasks = require('tasks');
 let task = require('task');
 var market = require('base.market');
+let mngSpawn = require('manager.spawn');
 
 
 /**
@@ -32,6 +33,7 @@ class mngColony {
 		mngColony.init();
 		mngColony.taskList = empire.taskList
 		this.homeRoom = homeRoom
+		this.RoomSpawn = new mngSpawn(this.homeRoom)
 	}
 
 	get taskList() {
@@ -121,7 +123,8 @@ class mngColony {
 		//console.log("Colony: " + this.homeRoom)
 
 		if ((Game.time % DELAYSPAWNING) == 0 && Game.cpu.bucket > CPU_THRESHOLD) {
-			Game.rooms[this.homeRoom].creepSpawnRun(Game.rooms[this.homeRoom]);
+			//Game.rooms[this.homeRoom].creepSpawnRun(Game.rooms[this.homeRoom]);
+			this.RoomSpawn.run()
 		}
 
 		// find all towers

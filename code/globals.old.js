@@ -305,8 +305,8 @@ buildingPlans = {
         },
         {
             //Level 3 (max 800)
-            minEnergy: 650,
-            body: [MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY]
+            minEnergy: 600,
+            body: [MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY, CARRY]
         },
         {
             //Level 4 (max 1300)

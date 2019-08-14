@@ -147,16 +147,16 @@ Object.defineProperty(global, 'CPU_LIMITER', {
 	configurable: true
 });
 
-global.BODYPART_THREAT = {
-	[HEAL]: 150,
-	[ATTACK]: 100,
-	[RANGED_ATTACK]: 50,
-	[WORK]: 10,
-	[CLAIM]: 10,
-	[CARRY]: 5,
-	[MOVE]: 2,
-	[TOUGH]: 1
-};
+global.BODYPART_THREAT = [
+	{part: "HEAL", prio: 150},
+	{part: "ATTACK", prio: 100},
+	{part: "RANGED_ATTACK", prio: 50},
+	{part: "WORK", prio: 10},
+	{part: "CLAIM", prio: 10},
+	{part: "CARRY", prio: 5},
+	{part: "MOVE", prio: 2},
+	{part: "TOUGH", prio: 1}
+];
 
 /**
  * Will probably be evaluated as max (priority / distance).

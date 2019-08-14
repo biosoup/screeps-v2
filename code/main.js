@@ -16,16 +16,6 @@ let colonies = {}
 let empire = new mngEmpire()
 console.log(empire.name + " initialized at " + Game.time)
 
-for (let r in Game.rooms) {
-    let room = Game.rooms[r]
-    if (_.isEmpty(room.controller)) continue
-    if (room.controller.my && room.controller.level > 0) {
-        colonies[r] = new mngColony(empire, r)
-        console.log(r + " initialized at " + Game.time)
-    }
-}
-
-
 require('global');
 require('functions.game');
 require('tools.prototype.Room.structures');
@@ -41,6 +31,24 @@ module.exports.loop = function() {
     profiler.wrap(function() {
         MemHack.pretick()
         stats.reset()
+
+        // 0) check for colony rooms
+        for (let r in Game.rooms) {
+            let room = Game.rooms[r]
+            if (_.isEmpty(room.controller)) {
+                if (colonies[r] && colonies[r].homeRoom === r) {
+                    //colony lost
+                    colonies[r] = undefined;
+                }
+                continue
+            }
+            if (room.controller.my && room.controller.level > 0) {
+                if (!colonies[r]) {
+                    colonies[r] = new mngColony(empire, r)
+                    console.log(r + " initialized at " + Game.time)
+                }
+            }
+        }
 
         // 1) empire run
         empire.run()

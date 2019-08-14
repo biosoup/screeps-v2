@@ -66,8 +66,6 @@ module.exports = {
 								creep.memory.buildRoadCounter = 0
 							}
 							creep.memory.buildRoadCounter++
-
-
 							return;
 						} else {
 							//if there is a free space in container
