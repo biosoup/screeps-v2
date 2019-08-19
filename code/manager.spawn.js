@@ -341,7 +341,7 @@ class RoomSpawn {
                     if (!(name < 0) && name != undefined) {
                         testSpawn.memory.lastSpawn = spawnList[spawnEntry];
                         if (LOG_SPAWN == true) {
-                            console.log("<font color=#00ff22 type='highlight'>NEW! " + testSpawn.name + " is spawning creep: " + name + " in room " + spawnRoom.name + ". (CPU used: " + (Game.cpu.getUsed() - cpuStart).toFixed(2) + ") on tick " + Game.time + " Creeps left in qeue: "+spawnList.length+"</font>");
+                            console.log("<font color=#00ff22 type='highlight'>NEW! " + testSpawn.name + " is spawning creep: " + name + " in room " + spawnRoom.name + ". (CPU used: " + (Game.cpu.getUsed() - cpuStart).toFixed(2) + ") on tick " + Game.time + " Creeps left in qeue: " + spawnList.length + "</font>");
                         }
                         spawnEntry++;
                     }
@@ -370,8 +370,9 @@ class RoomSpawn {
         if (spawnItem[3] == "work" && spawnItem[4] == false) {
             // equal number of work:carry:move, but max out work
             let energyCost = 200
+            let sizelimit = 50
             let numberOfWorkParts = Math.floor(energyAvaliable / energyCost);
-            numberOfWorkParts = Math.min(numberOfWorkParts, Math.floor(50 / 3)); //max size is 50 parts
+            numberOfWorkParts = Math.min(numberOfWorkParts, Math.floor(sizelimit / 3)); //max size is 50 parts
             for (let i = 0; i < numberOfWorkParts; i++) {
                 body.push(WORK);
                 body.push(CARRY);
@@ -383,8 +384,10 @@ class RoomSpawn {
         if (spawnItem[3] == "work" && spawnItem[4] == true) {
             // twice number of move to carry:work
             let energyCost = 250
+            let sizelimit = 50
+            if (spawnItem[1] == "longDistanceBuilder") sizelimit = 30
             let numberOfWorkParts = Math.floor(energyAvaliable / energyCost);
-            numberOfWorkParts = Math.min(numberOfWorkParts, Math.floor(50 / 4)); //max size is 50 parts
+            numberOfWorkParts = Math.min(numberOfWorkParts, Math.floor(sizelimit / 4)); //max size is 50 parts
             for (let i = 0; i < numberOfWorkParts; i++) {
                 body.push(WORK);
                 body.push(CARRY);
@@ -404,7 +407,8 @@ class RoomSpawn {
             let energyCost = 150
             let rcl = Game.rooms[this.name].controller.level
             let sizelimit = 50
-            if(rcl <7) sizelimit = 30
+            if (rcl < 7) sizelimit = 30
+            if (rcl == 7) sizelimit = 13*3
 
             let numberOfWorkParts = Math.floor(energyAvaliable / energyCost);
             numberOfWorkParts = Math.min(numberOfWorkParts, Math.floor(sizelimit / 3)); //max size is 50 parts
@@ -910,8 +914,9 @@ class RoomSpawn {
 
             // calculate the number of creeps needed
             let rrcl = spawnRoom.controller.level;
-            var LDLorryBody = this.createBody(["","longDistanceLorry",0,"carry",false])
-            var numCarryBody = _.sum(LDLorryBody, b => b == "carry")
+            var numCarryBody = 10
+            if (rrcl == 7) numCarryBody = 13
+            if (rrcl == 8) numCarryBody = 16
             var lorryCarryCapacity = numCarryBody * CARRY_CAPACITY
 
 

@@ -979,6 +979,8 @@ global.countCreeps = function () {
 			//sum of parts
 			var parts = _.sum(creeps, h => _.sum(h.body, part => part.type != ""))
 
+			//TODO: add que sum of parts that a spawn wants
+
 			totalCount = totalCount + creeps.length
 			console.log(roomName + " Has " + creeps.length + " creeps alive with " + parts + " (avgSize: " + (creepsPerSpawn).toFixed(2) + ") parts from " + (Game.rooms[roomName].spawns).length +
 				" spawns. Parts left for spawning: " + ((500 * (Game.rooms[roomName].spawns).length) - parts))
