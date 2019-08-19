@@ -15,7 +15,7 @@ let tableImportance = {
     },
     miner: {
         name: "miner",
-        prio: 15,
+        prio: 11,
         type: "mine",
         noRoads: false
     },
@@ -75,7 +75,7 @@ let tableImportance = {
     },
     claimer: {
         name: "claimer",
-        prio: 125,
+        prio: 150,
         type: "claim",
         noRoads: true
     },
@@ -87,8 +87,8 @@ let tableImportance = {
     },
     guard: {
         name: "guard",
-        prio: 11,
-        type: "einarr",
+        prio: 14,
+        type: "rangeAttack",
         noRoads: true
     },
     demolisher: {
@@ -194,7 +194,6 @@ class RoomSpawn {
     }
 
     run() {
-        console.log(this.name, " ** NEW SPAWN code **")
         let globalSpawningStatus = 0;
         let cpuStart = Game.cpu.getUsed();
         let spawnRoom = Game.rooms[this.name]
@@ -219,8 +218,8 @@ class RoomSpawn {
         let remoteRoomNeeds = this.remoteRooms()
 
         //prioritize them
-        homeRoomNeeds = this.prioritize(homeRoomNeeds)
-        remoteRoomNeeds = this.prioritize(remoteRoomNeeds)
+        //homeRoomNeeds = this.prioritize(homeRoomNeeds)
+        //remoteRoomNeeds = this.prioritize(remoteRoomNeeds)
         //console.log(JSON.stringify(homeRoomNeeds), " <br>", JSON.stringify(remoteRoomNeeds))
 
         if (!this.hostilePresence()) {
@@ -234,19 +233,29 @@ class RoomSpawn {
         let spawnList = homeRoomNeeds
 
         if (spawnList != null && spawnList.length > 0) {
+            let spawnListVisual = []
+            for (let i; i < spawnList.length; i++) {
+                spawnListVisual.push(spawnList[i][1])
+            }
+            Game.rooms[this.name].visual.text("Creeps wanted: " + JSON.stringify(spawnList),
+                2, 44, {
+                    size: '0.7',
+                    align: 'left',
+                    opacity: 0.5,
+                    'backgroundColor': '#040404',
+                    color: 'white'
+                });
+
             for (var s in spawnRoom.memory.roomArray.spawns) {
                 //iterate over spawns
                 let testSpawn = Game.getObjectById(spawnRoom.memory.roomArray.spawns[s]);
                 //check if spawn can spawn
                 if (testSpawn != null && testSpawn.spawning == null && testSpawn.memory.spawnRole != "x") {
 
-                    if (false) {
-                        var debug = JSON.stringify(spawnList) + "<br> " + JSON.stringify(minimumSpawnOf) + "<br>" + JSON.stringify(numberOf)
-                        console.log(spawnRoom.name + " " + debug + " *** ticks needed: " + neededTicksToSpawn)
-                    }
+                    //console.log(" ** " + spawnRoom.name + " ** " + JSON.stringify(spawnList))
 
                     // Spawn!
-                    if (spawnList[spawnEntry] == "miner") {
+                    if (spawnList[spawnEntry][1] == "miner") {
                         // check if all sources have miners
                         var sources = spawnRoom.memory.roomArray.sources
                         // iterate over all sources
@@ -264,7 +273,7 @@ class RoomSpawn {
                                 if (containers.length > 0 && spawnRoom.energyAvailable >= 300) {
                                     // spawn a miner
                                     body = this.createBody(spawnList[spawnEntry])
-                                    name = testSpawn.newCreep(spawnList[spawnEntry][1], spawnRoom.name, spawnList[spawnEntry][0], source.id, body);
+                                    if (body) name = testSpawn.newCreep(spawnList[spawnEntry][1], spawnRoom.name, spawnList[spawnEntry][0], source.id, body);
                                 } else {
                                     //no containers
                                     //TODO: move somewhere else, to room?
@@ -326,13 +335,13 @@ class RoomSpawn {
                         }
                     } else {
                         body = this.createBody(spawnList[spawnEntry])
-                        name = testSpawn.newCreep(spawnList[spawnEntry][1], spawnRoom.name, spawnList[spawnEntry][0], null, body);
+                        if (body) name = testSpawn.newCreep(spawnList[spawnEntry][1], spawnRoom.name, spawnList[spawnEntry][0], null, body);
                     }
                     testSpawn.memory.lastSpawnAttempt = spawnList[spawnEntry];
                     if (!(name < 0) && name != undefined) {
                         testSpawn.memory.lastSpawn = spawnList[spawnEntry];
                         if (LOG_SPAWN == true) {
-                            console.log("<font color=#00ff22 type='highlight'>" + testSpawn.name + " is spawning creep: " + name + " in room " + spawnRoom.name + ". (CPU used: " + (Game.cpu.getUsed() - cpuStart) + ") on tick " + Game.time + "<br> creeps left: " + JSON.stringify(spawnList) + "</font>");
+                            console.log("<font color=#00ff22 type='highlight'>NEW! " + testSpawn.name + " is spawning creep: " + name + " in room " + spawnRoom.name + ". (CPU used: " + (Game.cpu.getUsed() - cpuStart).toFixed(2) + ") on tick " + Game.time + " Creeps left in qeue: "+spawnList.length+"</font>");
                         }
                         spawnEntry++;
                     }
@@ -349,7 +358,13 @@ class RoomSpawn {
         //spawnItem = [targeRoom,role,prio,type,noRoad]
 
         let energyAvaliable = Game.rooms[this.name].energyAvailable
+
+        let allMyCreeps = _.filter(Game.creeps, (c) => c.memory.home == this.name && (c.ticksToLive > (c.body.length * 3) - 3 || c.spawning == true));
+        if (spawnItem[1] != "harvester") {
+            if (energyAvaliable < Game.rooms[this.name].energyCapacityAvailable / 2 && allMyCreeps.length > 3) return false //not gonna spawn too small body, if there are already some creeps around
+        }
         var body = [];
+
 
         //ROAD WORKERS
         if (spawnItem[3] == "work" && spawnItem[4] == false) {
@@ -364,7 +379,7 @@ class RoomSpawn {
             }
         }
 
-        //ROAD WORKERS
+        //OFFROAD WORKERS
         if (spawnItem[3] == "work" && spawnItem[4] == true) {
             // twice number of move to carry:work
             let energyCost = 250
@@ -380,10 +395,19 @@ class RoomSpawn {
 
         //ROAD CARRY
         if (spawnItem[3] == "carry" && spawnItem[4] == false) {
+            /**
+             * TODO:
+             * better lorry spawning, now spawning way too few - downscale based on RCL
+             * limit size until lvl rcl 7
+             */
             // create a body with twice as many CARRY as MOVE parts
             let energyCost = 150
+            let rcl = Game.rooms[this.name].controller.level
+            let sizelimit = 50
+            if(rcl <7) sizelimit = 30
+
             let numberOfWorkParts = Math.floor(energyAvaliable / energyCost);
-            numberOfWorkParts = Math.min(numberOfWorkParts, Math.floor(50 / 3)); //max size is 50 parts
+            numberOfWorkParts = Math.min(numberOfWorkParts, Math.floor(sizelimit / 3)); //max size is 50 parts
             for (let i = 0; i < numberOfWorkParts; i++) {
                 body.push(CARRY);
                 body.push(CARRY);
@@ -430,23 +454,30 @@ class RoomSpawn {
             }
         }
 
-        // GUARD & EINARR
+        //FIXME: GUARD EINARR
         if (spawnItem[3] == "einarr" && spawnItem[4] == true) {
             // create a body with twice as many attack parts to heal parts, and adequate move parts
             let energyCost = 620
             let numberOfWorkParts = Math.floor(energyAvaliable / energyCost);
-            numberOfWorkParts = Math.min(numberOfWorkParts, Math.floor(50 / 6)); //max size is 50 parts
+            numberOfWorkParts = Math.min(numberOfWorkParts, Math.floor((50 - 2) / 6)); //max size is 50 parts
             body.push(TOUGH); //50
             body.push(MOVE); //10
-            for (let i = 0; i < numberOfWorkParts; i++) {
-                body.push(ATTACK); //160
-                body.push(ATTACK);
-                body.push(HEAL); //250
-                body.push(MOVE); //150
-                body.push(MOVE);
-                body.push(MOVE);
+            for (let i = 0; i < (numberOfWorkParts); i++) {
+                let parts = numberOfWorkParts * 6 - 2
+                for (let i = 0; i < (parts / 2); i++) {
+                    body.push(MOVE); //50
+                    parts--
+                }
+                for (let i = 0; i < Math.ceil(parts / 3 * 2); i++) {
+                    body.push(ATTACK); //80
+                    parts--
+                }
+                for (let i = 0; i < Math.floor(parts / 3 * 1); i++) {
+                    body.push(HEAL); //250
+                    parts--
+                }
             }
-
+            console.log("guard: " + numberOfWorkParts + " " + energyAvaliable)
         }
 
         // ATTACK
@@ -478,7 +509,7 @@ class RoomSpawn {
         }
 
         // HEALER
-        if (spawnItem[3] == "rangeAttack" && spawnItem[4] == true) {
+        if (spawnItem[3] == "heal" && spawnItem[4] == true) {
             // create a body with twice as many attack parts to heal parts, and adequate move parts
             let energyCost = 300
             let numberOfWorkParts = Math.floor(energyAvaliable / energyCost);
@@ -495,9 +526,11 @@ class RoomSpawn {
     }
 
     homeRoom() {
+        //FIXME: check existing creep levels!!!!
         let homeRoomNeeds = []
         let spawnRoom = this.spawnRoom
-        let numberOfSources = _.sum(spawnRoom.find(FIND_SOURCES))
+        let numberOfSources = spawnRoom.find(FIND_SOURCES).length
+
         let rcl = spawnRoom.controller.level;
         var numberOfTowers = spawnRoom.find(FIND_STRUCTURES, {
             filter: (s) => s.structureType == STRUCTURE_TOWER && s.energy > 0
@@ -515,11 +548,11 @@ class RoomSpawn {
                 progress += constructionSites[w].progress;
                 totalProgress += constructionSites[w].progressTotal;
             }
-            let buildersNeeded = Math.ceil((totalProgress - progress) / 5000)
+            let buildersNeeded = Math.ceil((totalProgress - progress) / 10000)
             if (buildersNeeded > Math.ceil(numberOfSources * 1.5)) {
                 buildersNeeded = Math.ceil(numberOfSources * 1.5);
             }
-            for (let i = 0; i < buildersNeeded; i++) {
+            for (let i = 0; i < buildersNeeded - _.sum(allMyCreeps, (c) => c.memory.role == 'builder' && c.memory.home == this.name); i++) {
                 homeRoomNeeds.push([this.name, "builder"]);
             }
         } else if ((rcl <= 3 || numberOfTowers.length == 0) &&
@@ -543,8 +576,12 @@ class RoomSpawn {
                 var mutiply = spawnRoom.storage.store[RESOURCE_ENERGY] / (MINSURPLUSENERGY * spawnRoom.controller.level)
                 upgradersNeeded = _.ceil(2 * mutiply)
             }
+            if (spawnRoom.storage.store[RESOURCE_ENERGY] < 10000) {
+                upgradersNeeded = 0
+            }
         }
-        for (let i = 0; i < upgradersNeeded; i++) {
+        let upgradersAlive = _.sum(allMyCreeps, (c) => c.memory.role == 'upgrader' && c.memory.home == this.name)
+        for (let i = 0; i < upgradersNeeded - upgradersAlive; i++) {
             homeRoomNeeds.push([this.name, "upgrader"]);
         }
 
@@ -556,28 +593,38 @@ class RoomSpawn {
         if (wallRepairTargets.length > 0) {
             wallRepairerNeeded = Math.ceil(numberOfSources * 0.5);
         }
-        for (let i = 0; i < wallRepairerNeeded; i++) {
+        let wallRepairerAlive = _.sum(allMyCreeps, (c) => c.memory.role == 'wallRepairer' && c.memory.home == this.name)
+        for (let i = 0; i < wallRepairerNeeded - wallRepairerAlive; i++) {
             homeRoomNeeds.push([this.name, "wallRepairer"]);
         }
 
 
         // runner
         if (spawnRoom.storage != undefined) {
-            homeRoomNeeds.push([this.name, "runner"]);
+            let wallRepairerAlive = _.sum(allMyCreeps, (c) => c.memory.role == 'runner' && c.memory.home == this.name)
+            if (wallRepairerAlive == 0) homeRoomNeeds.push([this.name, "runner"]);
         } else if (rcl <= 4 && spawnRoom.energyCapacity > 300) {
-            homeRoomNeeds.push([this.name, "runner"]);
+            let wallRepairerAlive = _.sum(allMyCreeps, (c) => c.memory.role == 'runner' && c.memory.home == this.name)
+            if (wallRepairerAlive == 0) homeRoomNeeds.push([this.name, "runner"]);
         }
 
         var numberOfMiners = _.sum(allMyCreeps, (c) => c.memory.role == 'miner' && c.memory.home == spawnRoom.name)
         var numberOfSA = _.sum(allMyCreeps, (c) => c.memory.role == 'runner' && c.memory.home == spawnRoom.name)
+        var numberOfHarvesters = _.sum(allMyCreeps, (c) => c.memory.role == 'harvester' && c.memory.home == spawnRoom.name)
 
         // Miners
-        for (let i = 0; i < numberOfSources; i++) {
+        for (let i = 0; i < numberOfSources - numberOfMiners; i++) {
             homeRoomNeeds.push([this.name, "miner"]);
         }
         // Harvester
-        if (numberOfMiners + numberOfSA == 0) {
+        if (numberOfMiners + numberOfSA == 0 && numberOfHarvesters == 0) {
             homeRoomNeeds.push([this.name, "harvester"]);
+        }
+
+        if (!_.isEmpty(spawnRoom.storage) && rcl >= 4) {
+            if (spawnRoom.storage.store.energy < 20000 && numberOfHarvesters == 0) {
+                homeRoomNeeds.push([this.name, "harvester"]);
+            }
         }
 
         if (_.isEmpty(spawnRoom.storage) && rcl < 4) {
@@ -599,7 +646,8 @@ class RoomSpawn {
             } else {
                 harvestersNeeded = numberOfSources * 2
             }
-            for (let i = 0; i < harvestersNeeded; i++) {
+            let harvesterAlive = _.sum(allMyCreeps, (c) => c.memory.role == 'harvester' && c.memory.home == this.name)
+            for (let i = 0; i < harvestersNeeded - harvesterAlive; i++) {
                 homeRoomNeeds.push([this.name, "harvester"]);
             }
         }
@@ -609,7 +657,12 @@ class RoomSpawn {
         if (spawnRoom.storage == undefined || Game.getObjectById(spawnRoom.memory.roomArray.minerals[0]) == null || Game.getObjectById(spawnRoom.memory.roomArray.minerals[0]).mineralAmount == 0) {
             //no mineralHarvester needed
         } else {
-            homeRoomNeeds.push([this.name, "mineralHarvester"]);
+            if (!_.isEmpty(spawnRoom.storage) && !_.isEmpty(spawnRoom.extractor)) {
+                if (spawnRoom.storage.store.energy > 50000) {
+                    let mineralHarvesterAlive = _.sum(allMyCreeps, (c) => c.memory.role == 'mineralHarvester' && c.memory.home == this.name)
+                    if (mineralHarvesterAlive == 0) homeRoomNeeds.push([this.name, "mineralHarvester"]);
+                }
+            }
         }
 
         // Transporter
@@ -640,7 +693,10 @@ class RoomSpawn {
                 }
             }
             if (spawnTransporter) {
-                homeRoomNeeds.push([this.name, "transporter"]);
+                if (spawnRoom.storage.store.energy > 50000) {
+                    let transporterAlive = _.sum(allMyCreeps, (c) => c.memory.role == 'transporter' && c.memory.home == this.name)
+                    if (transporterAlive == 0) homeRoomNeeds.push([this.name, "transporter"]);
+                }
             }
         }
 
@@ -648,7 +704,10 @@ class RoomSpawn {
         if (spawnRoom.memory.labOrder != undefined) {
             var info = spawnRoom.memory.labOrder.split(":");
             if (info[3] == "prepare" || info[3] == "done") {
-                homeRoomNeeds.push([this.name, "scientist"]);
+                if (spawnRoom.storage.store.energy > 50000) {
+                    let scientistAlive = _.sum(allMyCreeps, (c) => c.memory.role == 'scientist' && c.memory.home == this.name)
+                    if (scientistAlive == 0) homeRoomNeeds.push([this.name, "scientist"]);
+                }
             }
         }
 
@@ -658,15 +717,17 @@ class RoomSpawn {
                 filter: f => f.structureType == STRUCTURE_POWER_SPAWN
             })
             if (!_.isEmpty(powerSpawn) && spawnRoom.storage.store[RESOURCE_POWER] >= 100 && spawnRoom.storage.store[RESOURCE_ENERGY] >= MINSURPLUSENERGY) {
-                homeRoomNeeds.push([this.name, "herocreep"]);
+                let herocreepAlive = _.sum(allMyCreeps, (c) => c.memory.role == 'herocreep' && c.memory.home == this.name)
+                if (herocreepAlive == 0) homeRoomNeeds.push([this.name, "herocreep"]);
             }
             if (spawnRoom.storage.store[RESOURCE_GHODIUM] >= 1000 && spawnRoom.controller.safeModeAvailable <= 3) {
-                homeRoomNeeds.push([this.name, "herocreep"]);
+                let herocreepAlive = _.sum(allMyCreeps, (c) => c.memory.role == 'herocreep' && c.memory.home == this.name)
+                if (herocreepAlive == 0) homeRoomNeeds.push([this.name, "herocreep"]);
             }
         }
 
         //keep at least one guard ready
-        var avaliableGuards = _.filter(allMyCreeps, (c) => c.memory.role == 'guard' && c.memory.target == spawnRoom.name)
+        var avaliableGuards = _.filter(allMyCreeps, (c) => c.memory.role == 'guard' && c.memory.home == spawnRoom.name)
         var remoteMiners = _.filter(allMyCreeps, (c) => c.memory.role == 'longDistanceMiner' && c.memory.home == spawnRoom.name)
         if (avaliableGuards.length == 0 && remoteMiners.length > 0) {
             homeRoomNeeds.push([this.name, "guard"]);
@@ -710,7 +771,7 @@ class RoomSpawn {
              }
 		 } */
 
-        return homeRoomNeeds
+        return this.prioritize(homeRoomNeeds)
     }
 
     hostilePresence() {
@@ -720,28 +781,30 @@ class RoomSpawn {
 
     remoteRooms() {
         var allFlags = _.filter(Game.flags, (f) => _.last(_.words(f.name, /[^-]+/g)) == this.name)
+        let allMyCreeps = _.filter(Game.creeps, (c) => c.memory.home == this.name && (c.ticksToLive > (c.body.length * 3) - 3 || c.spawning == true));
         let remoteRoomNeeds = []
 
         for (var flag of allFlags) {
             //what they need, how much they need
-
+            let flagNeeds = []
             if (flag.color == COLOR_RED) {
-                var existingCreeps = _.sum(Game.creeps, (c) => c.memory.role == 'longDistanceHarvester' && c.memory.target == flag.pos.roomName)
+                var existingCreeps = _.sum(allMyCreeps, (c) => c.memory.role == 'longDistanceHarvester' && c.memory.target == flag.pos.roomName)
                 for (let i = 0; i < (flag.secondaryColor - existingCreeps); i++) {
-                    remoteRoomNeeds.push([flag.pos.roomName, "longDistanceHarvester"])
+                    flagNeeds.push([flag.pos.roomName, "longDistanceHarvester"])
                 }
             }
 
             if (flag.color == COLOR_PURPLE) {
-                var existingCreeps = _.sum(Game.creeps, (c) => c.memory.role == 'longDistanceMiner' && c.memory.target == flag.pos.roomName)
+                var existingCreeps = _.sum(allMyCreeps, (c) => c.memory.role == 'longDistanceMiner' && c.memory.target == flag.pos.roomName)
                 for (let i = 0; i < (flag.secondaryColor - existingCreeps); i++) {
-                    remoteRoomNeeds.push([flag.pos.roomName, "longDistanceMiner"])
+                    flagNeeds.push([flag.pos.roomName, "longDistanceMiner"])
                 }
 
                 //add lorries for miners
                 let lorries = this.remoteRoomContainers(flag.pos.roomName)
-                for (let i = 0; i < lorries; i++) {
-                    remoteRoomNeeds.push([flag.pos.roomName, "longDistanceLorry"])
+                var existingCreepsLDL = _.sum(allMyCreeps, (c) => c.memory.role == 'longDistanceLorry' && c.memory.home == this.name)
+                for (let i = 0; i < lorries - existingCreepsLDL; i++) {
+                    flagNeeds.push([flag.pos.roomName, "longDistanceLorry"])
                 }
 
                 //add remote builders
@@ -755,66 +818,70 @@ class RoomSpawn {
                             s.structureType != STRUCTURE_RAMPART
                     });
                     if ((numOfConstrustions.length + numOfRepairsites.length) > 0) {
-                        remoteRoomNeeds.push([flag.pos.roomName, "longDistanceBuilder"])
+                        var existingCreepsLDB = _.sum(allMyCreeps, (c) => c.memory.role == 'longDistanceBuilder' && c.memory.target == flag.pos.roomName)
+                        if (existingCreepsLDB == 0) flagNeeds.push([flag.pos.roomName, "longDistanceBuilder"])
                     }
                 } else {
-                    remoteRoomNeeds.push([flag.pos.roomName, "scout"])
+                    //flagNeeds.push([flag.pos.roomName, "scout"])
                 }
 
                 //add claimers
+                var existingCreepsC = _.sum(allMyCreeps, (c) => c.memory.role == 'claimer' && c.memory.target == flag.pos.roomName)
                 if (Game.rooms[flag.pos.roomName] != undefined) {
                     if (Game.rooms[flag.pos.roomName].controller != undefined && Game.rooms[flag.pos.roomName].controller.reservation != undefined) {
                         if (Game.rooms[flag.pos.roomName].controller.reservation.username == playerUsername) {
                             var reservationLeft = Game.rooms[flag.pos.roomName].controller.reservation.ticksToEnd
                             if (reservationLeft < 3000) {
-                                remoteRoomNeeds.push([flag.pos.roomName, "claimer"])
+                                if (existingCreepsC == 0) flagNeeds.push([flag.pos.roomName, "claimer"])
                             }
                         } else {
-                            remoteRoomNeeds.push([flag.pos.roomName, "claimer"])
+                            if (existingCreepsC == 0) flagNeeds.push([flag.pos.roomName, "claimer"])
                         }
                     } else {
-                        remoteRoomNeeds.push([flag.pos.roomName, "claimer"])
+                        if (existingCreepsC == 0) flagNeeds.push([flag.pos.roomName, "claimer"])
                     }
                 } else {
-                    remoteRoomNeeds.push([flag.pos.roomName, "claimer"])
+                    if (existingCreepsC == 0) flagNeeds.push([flag.pos.roomName, "claimer"])
                 }
 
             }
 
             if (flag.color == COLOR_WHITE) {
-                var existingCreeps = _.sum(Game.creeps, (c) => c.memory.role == 'guard' && c.memory.home == flag.pos.roomName)
+                var existingCreeps = _.sum(allMyCreeps, (c) => c.memory.role == 'guard' && c.memory.home == flag.pos.roomName)
                 for (let i = 0; i < (flag.secondaryColor - existingCreeps); i++) {
-                    remoteRoomNeeds.push([flag.pos.roomName, "guard"])
+                    //flagNeeds.push([flag.pos.roomName, "guard"])
                 }
             }
 
             if (flag.color == COLOR_GREY) {
-                var existingCreeps = _.sum(Game.creeps, (c) => c.memory.role == 'claimer' && c.memory.home == flag.pos.roomName)
+                var existingCreeps = _.sum(allMyCreeps, (c) => c.memory.role == 'claimer' && c.memory.target == flag.pos.roomName)
                 for (let i = 0; i < (flag.secondaryColor - existingCreeps); i++) {
-                    remoteRoomNeeds.push([flag.pos.roomName, "claimer"])
+                    flagNeeds.push([flag.pos.roomName, "claimer"])
                 }
             }
 
             if (flag.color == COLOR_BROWN) {
-                var existingCreeps = _.sum(Game.creeps, (c) => c.memory.role == 'einarr' && c.memory.target == flag.pos.roomName)
+                var existingCreeps = _.sum(allMyCreeps, (c) => c.memory.role == 'einarr' && c.memory.target == flag.pos.roomName)
                 for (let i = 0; i < (flag.secondaryColor - existingCreeps); i++) {
-                    remoteRoomNeeds.push([flag.pos.roomName, "einarr"])
+                    flagNeeds.push([flag.pos.roomName, "einarr"])
                 }
             }
 
             if (flag.color == COLOR_ORANGE) {
-                var existingCreeps = _.sum(Game.creeps, (c) => c.memory.role == 'demolisher' && c.memory.target == flag.pos.roomName)
+                var existingCreeps = _.sum(allMyCreeps, (c) => c.memory.role == 'demolisher' && c.memory.target == flag.pos.roomName)
                 for (let i = 0; i < (flag.secondaryColor - existingCreeps); i++) {
-                    remoteRoomNeeds.push([flag.pos.roomName, "demolisher"])
+                    flagNeeds.push([flag.pos.roomName, "demolisher"])
                 }
             }
 
             if (flag.color == COLOR_YELLOW) {
-                var existingCreeps = _.sum(Game.creeps, (c) => c.memory.role == 'scout' && c.memory.target == flag.pos.roomName)
+                var existingCreeps = _.sum(allMyCreeps, (c) => c.memory.role == 'scout' && c.memory.target == flag.pos.roomName)
                 for (let i = 0; i < (flag.secondaryColor - existingCreeps); i++) {
-                    remoteRoomNeeds.push([flag.pos.roomName, "scout"])
+                    //flagNeeds.push([flag.pos.roomName, "scout"])
                 }
             }
+            flagNeeds = this.prioritize(flagNeeds)
+            remoteRoomNeeds.push(...flagNeeds)
         }
         //return list of needs for given room
         return remoteRoomNeeds;
@@ -843,7 +910,7 @@ class RoomSpawn {
 
             // calculate the number of creeps needed
             let rrcl = spawnRoom.controller.level;
-            var LDLorryBody = buildingPlans["longDistanceLorry"][rrcl - 1].body
+            var LDLorryBody = this.createBody(["","longDistanceLorry",0,"carry",false])
             var numCarryBody = _.sum(LDLorryBody, b => b == "carry")
             var lorryCarryCapacity = numCarryBody * CARRY_CAPACITY
 
@@ -878,7 +945,10 @@ class RoomSpawn {
                 }
             }
         }
-        spawnList = _.sortBy(spawnList, "prio");
+        //FIXME: prioritization is not working
+        spawnList.sort(function(a, b) {
+            return a[2] - b[2];
+        });
 
         return spawnList;
     }
@@ -910,8 +980,7 @@ StructureSpawn.prototype.newCreep =
             });
         } else {
             if (testIfCanSpawn != -6) {
-                console.log(this.name + " result: " + testIfCanSpawn + " body: " + body + " energyValiable: " + this.room.energyAvailable + "/" + this.room.energyCapacityAvailable + "<br> " +
-                    roleName, home = this.room, target, sourceId)
+                console.log(this.name + " result: " + testIfCanSpawn + " body: " + body + " energyValiable: " + this.room.energyAvailable + "/" + this.room.energyCapacityAvailable + "<br> " + roleName, home, target, sourceId)
             }
         }
     };

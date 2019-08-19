@@ -20,7 +20,7 @@ module.exports = {
                     } else if (creep.carry.energy == creep.carryCapacity) {
                         //look for a link
                         var link = _.first(source.pos.findInRange(creep.room.links, 2))
-                        if (!_.isEmpty(link)) {
+                        if (!_.isEmpty(link) && creep.room.energy == creep.room.energyCapacity/2) {
                             if (link.energy < link.energyCapacity) {
                                 //there is a space in the link
                                 creep.task = Tasks.transfer(link);
@@ -103,8 +103,9 @@ module.exports = {
             }
         } else {
             creep.say("missing source")
-            console.log(creep + " " + source)
-            creep.task = Tasks.goTo(source)
+            //console.log(creep + " " + source)
+            //creep.task = Tasks.goTo(source)
+            creep.suicide()
             return
         }
     }

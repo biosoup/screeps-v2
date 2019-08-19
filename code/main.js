@@ -28,8 +28,8 @@ require("ext.prototype.tower")
 
 
 module.exports.loop = function() {
+    MemHack.pretick()
     profiler.wrap(function() {
-        MemHack.pretick()
         stats.reset()
 
         // 0) check for colony rooms
@@ -82,7 +82,9 @@ module.exports.loop = function() {
 				} */
             } catch (err) {
                 Game.creeps[creep].say("RUN ROLE ERR!!")
-                console.log("RUN ROLE ERR: " + creep + " at " + err.stack)
+                //console.log("RUN ROLE ERR: " + creep + " at " + err.stack)
+                Game.creeps[creep].task = {}
+                //Game.creeps[creep].suicide()
             }
 
             try {
