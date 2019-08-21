@@ -69,3 +69,5 @@ Spawn3 is spawning creep: transporter-W32N13--8028640 in room W32N13. (CPU used:
 [{"id":"5cff24da5b0b7e667bffeb4f","pos":{"x":38,"y":21,"roomName":"W27N14"},"energy":920,"time":8028615,"distance":75,"ed":6.133333333333334},{"id":"5cfe
 d049c4be3409e53dab3d","pos":{"x":15,"y":35,"roomName":"W27N15"},"energy":2000,"time":8028615,"distance":83,"ed":12.048192771084338},{"id":"5cff237a63738f
 09b78089bb","pos":{"x":34,"y":17,"roomName":"W28N15"},"energy":2000,"time":8028615,"distance":81,"ed":12.345679012345679}]
+
+

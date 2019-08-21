@@ -10136,3 +10136,125 @@
     "y": 49,
     "roomName": "W31N11"
 }]
+
+[{
+    "pos": {
+        "x": 26,
+        "y": 21,
+        "roomName": "W3S18"
+    },
+    "name": "RH-fhskhf-W2S18",
+    "color": 2,
+    "secondaryColor": 1
+}, {
+    "pos": {
+        "x": 25,
+        "y": 25,
+        "roomName": "W3S18"
+    },
+    "name": "DEFEND-W3S18-W2S18",
+    "color": 10,
+    "secondaryColor": 1
+}, {
+    "room": {
+        "name": "W2S19",
+        "energyAvailable": 0,
+        "energyCapacityAvailable": 0,
+        "visual": {
+            "roomName": "W2S19"
+        }
+    },
+    "pos": {
+        "x": 21,
+        "y": 25,
+        "roomName": "W2S19"
+    },
+    "name": "RH-fhdsskhf-W2S18",
+    "color": 2,
+    "secondaryColor": 2
+}, {
+    "room": {
+        "name": "W1S18",
+        "energyAvailable": 0,
+        "energyCapacityAvailable": 0,
+        "visual": {
+            "roomName": "W1S18"
+        }
+    },
+    "pos": {
+        "x": 18,
+        "y": 16,
+        "roomName": "W1S18"
+    },
+    "name": "RH-fdsdshskhf-W2S18",
+    "color": 2,
+    "secondaryColor": 1
+}, {
+    "room": {
+        "name": "W2S17",
+        "energyAvailable": 0,
+        "energyCapacityAvailable": 0,
+        "visual": {
+            "roomName": "W2S17"
+        }
+    },
+    "pos": {
+        "x": 25,
+        "y": 33,
+        "roomName": "W2S17"
+    },
+    "name": "RH-fdshskhf-W2S18",
+    "color": 2,
+    "secondaryColor": 1
+}, {
+    "room": {
+        "name": "W2S16",
+        "energyAvailable": 0,
+        "energyCapacityAvailable": 0,
+        "visual": {
+            "roomName": "W2S16"
+        }
+    },
+    "pos": {
+        "x": 24,
+        "y": 24,
+        "roomName": "W2S16"
+    },
+    "name": "RH-fhsdfsskhf-W2S18",
+    "color": 2,
+    "secondaryColor": 2
+}, {
+    "room": {
+        "name": "W1S19",
+        "energyAvailable": 0,
+        "energyCapacityAvailable": 0,
+        "visual": {
+            "roomName": "W1S19"
+        }
+    },
+    "pos": {
+        "x": 22,
+        "y": 22,
+        "roomName": "W1S19"
+    },
+    "name": "RH-fhsghgkhf-W2S18",
+    "color": 2,
+    "secondaryColor": 2
+}, {
+    "room": {
+        "name": "W1S17",
+        "energyAvailable": 0,
+        "energyCapacityAvailable": 0,
+        "visual": {
+            "roomName": "W1S17"
+        }
+    },
+    "pos": {
+        "x": 23,
+        "y": 16,
+        "roomName": "W1S17"
+    },
+    "name": "RH-fdkfsjl-W2S18",
+    "color": 2,
+    "secondaryColor": 1
+}]

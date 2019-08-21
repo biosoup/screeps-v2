@@ -1,4 +1,6 @@
 //manager spawn
+require('functions.game');
+
 
 let tableImportance = {
     harvester: {
@@ -234,6 +236,7 @@ class RoomSpawn {
 
         if (spawnList != null && spawnList.length > 0) {
             let spawnListVisual = []
+            let spawnTime = 0
             for (let i; i < spawnList.length; i++) {
                 spawnListVisual.push(spawnList[i][1])
             }
@@ -341,7 +344,7 @@ class RoomSpawn {
                     if (!(name < 0) && name != undefined) {
                         testSpawn.memory.lastSpawn = spawnList[spawnEntry];
                         if (LOG_SPAWN == true) {
-                            console.log("<font color=#00ff22 type='highlight'>NEW! " + testSpawn.name + " is spawning creep: " + name + " in room " + spawnRoom.name + ". (CPU used: " + (Game.cpu.getUsed() - cpuStart).toFixed(2) + ") on tick " + Game.time + " Creeps left in qeue: " + spawnList.length + "</font>");
+                            console.log("<font color=#00ff22 type='highlight'>NEW! " + testSpawn.name + " is spawning creep: " + name + " in room " + spawnRoom.name + "(" + spawnRoom.energyAvailable + "/" + spawnRoom.energyCapacityAvailable + " cost:" + UNIT_COST(body) + "). (CPU used: " + (Game.cpu.getUsed() - cpuStart).toFixed(2) + ") on tick " + Game.time + " qeue: " + spawnList.length + "</font>");
                         }
                         spawnEntry++;
                     }
@@ -358,10 +361,15 @@ class RoomSpawn {
         //spawnItem = [targeRoom,role,prio,type,noRoad]
 
         let energyAvaliable = Game.rooms[this.name].energyAvailable
+        let rcl = Game.rooms[this.name].controller.level
 
         let allMyCreeps = _.filter(Game.creeps, (c) => c.memory.home == this.name && (c.ticksToLive > (c.body.length * 3) - 3 || c.spawning == true));
         if (spawnItem[1] != "harvester") {
-            if (energyAvaliable < Game.rooms[this.name].energyCapacityAvailable / 2 && allMyCreeps.length > 3) return false //not gonna spawn too small body, if there are already some creeps around
+            if (energyAvaliable < Game.rooms[this.name].energyCapacityAvailable / 2 && allMyCreeps.length > 3) {
+                //not gonna spawn too small body, if there are already some creeps around
+                console.log("Not enough energy for ", spawnItem[1], " at ", this.name)
+                return false
+            }
         }
         var body = [];
 
@@ -405,10 +413,10 @@ class RoomSpawn {
              */
             // create a body with twice as many CARRY as MOVE parts
             let energyCost = 150
-            let rcl = Game.rooms[this.name].controller.level
+
             let sizelimit = 50
             if (rcl < 7) sizelimit = 30
-            if (rcl == 7) sizelimit = 13*3
+            if (rcl == 7) sizelimit = 13 * 3
 
             let numberOfWorkParts = Math.floor(energyAvaliable / energyCost);
             numberOfWorkParts = Math.min(numberOfWorkParts, Math.floor(sizelimit / 3)); //max size is 50 parts
@@ -447,11 +455,13 @@ class RoomSpawn {
 
         // CLAIMER
         if (spawnItem[3] == "claim" && spawnItem[4] == true) {
-            // create a body with 7 work, 2 CARRY and twice amount of move parts
             let energyCost = 650
+            let sizelimit = 8 //equals 4 claim parts
+            if (rcl < 7) sizelimit = 4
+            if (rcl == 7) sizelimit = 6
             if (energyLimit) energyAvaliable = energyLimit //do not spawn bigger claimer than needed
             let numberOfWorkParts = Math.floor(energyAvaliable / energyCost);
-            numberOfWorkParts = Math.min(numberOfWorkParts, Math.floor(50 / 2)); //max size is 50 parts
+            numberOfWorkParts = Math.min(numberOfWorkParts, Math.floor(sizelimit / 2)); //max size is 50 parts
             for (let i = 0; i < numberOfWorkParts; i++) {
                 body.push(CLAIM);
                 body.push(MOVE);
@@ -788,6 +798,11 @@ class RoomSpawn {
         let allMyCreeps = _.filter(Game.creeps, (c) => c.memory.home == this.name && (c.ticksToLive > (c.body.length * 3) - 3 || c.spawning == true));
         let remoteRoomNeeds = []
 
+        //order by distance form home room
+        allFlags = _.sortBy(allFlags, function(n) {
+            XYroomDistance(_.last(_.words(n.name, /[^-]+/g)), n.pos.roomName);
+        })
+
         for (var flag of allFlags) {
             //what they need, how much they need
             let flagNeeds = []
@@ -835,7 +850,7 @@ class RoomSpawn {
                     if (Game.rooms[flag.pos.roomName].controller != undefined && Game.rooms[flag.pos.roomName].controller.reservation != undefined) {
                         if (Game.rooms[flag.pos.roomName].controller.reservation.username == playerUsername) {
                             var reservationLeft = Game.rooms[flag.pos.roomName].controller.reservation.ticksToEnd
-                            if (reservationLeft < 3000) {
+                            if (reservationLeft < 1000) {
                                 if (existingCreepsC == 0) flagNeeds.push([flag.pos.roomName, "claimer"])
                             }
                         } else {

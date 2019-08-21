@@ -5,6 +5,15 @@ global.getMasterSpawn = function (roomName) {
 	return Game.rooms[roomName].memory.masterSpawn;
 };
 
+global.XYroomDistance = function(fromRoom, toRoom) {
+    //get a distance as diff in both X and Y
+    fromRoom = _.words(fromRoom, /[0-9]+/g)
+    toRoom = _.words(toRoom, /[0-9]+/g)
+
+    //console.log(JSON.stringify(fromRoom),JSON.stringify(toRoom))
+    return Math.abs(toRoom[0] - fromRoom[0]) + Math.abs(toRoom[1] - fromRoom[1])
+}
+
 global.countConstructionSites = function () {
 	//shard wide check for number of construction sites
 	var count = 0
