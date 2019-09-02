@@ -1388,7 +1388,7 @@ Room.prototype.getSpawnList = function(spawnRoom, minimumSpawnOf, numberOf) {
         },
         claimer: {
             name: "claimer",
-            prio: 125,
+            prio: 145,
             energyRole: false,
             min: minimumSpawnOf.claimer,
             max: numberOf.claimer,

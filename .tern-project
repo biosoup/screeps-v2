@@ -1,0 +1,11 @@
+{
+  "libs": [
+    "screeps"
+  ],
+  "plugins": {},
+  "ecmaVersion": "6",
+  "loadEagerly": [
+    "ScreepsAutocomplete-master/**/*.js"
+  ],
+  "dontLoad": []
+}

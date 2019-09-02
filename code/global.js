@@ -430,7 +430,7 @@ global.RBS_PACKETSIZE = 5000;
 global.CPU_THRESHOLD = 500;
 global.WALLMAX = 10000000;
 global.MINSURPLUSENERGY = 50000; //multiplied by RCL to get storage energy stresholds
-global.LOG_TERMINAL = false;
+global.LOG_TERMINAL = true;
 global.LOG_MARKET = true;
 global.LOG_SPAWN = true;
 global.LOG_EXPIRE = true;
@@ -698,6 +698,12 @@ global.unicodeEscape = function (str) {
 };
 
 global.activeTerminals = function () {
+	//Fill myRooms
+	let myRooms = {};
+	var myroomlist = _.values(Game.rooms).filter(r => _.get(r, ['controller', 'owner', 'username'], undefined) === playerUsername);
+	for (let m in myroomlist) {
+		myRooms[myroomlist[m].name] = myroomlist[m];
+	}
 	let entries = 0;
 	let returnString = "";
 	for (r in myRooms) {
@@ -724,6 +730,12 @@ global.activeTerminals = function () {
 };
 
 global.activeLabs = function () {
+	//Fill myRooms
+	let myRooms = {};
+	var myroomlist = _.values(Game.rooms).filter(r => _.get(r, ['controller', 'owner', 'username'], undefined) === playerUsername);
+	for (let m in myroomlist) {
+		myRooms[myroomlist[m].name] = myroomlist[m];
+	}
 	let entries = 0;
 	let returnString = "";
 	for (r in myRooms) {

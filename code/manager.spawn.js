@@ -989,7 +989,7 @@ StructureSpawn.prototype.newCreep =
             dryRun: true
         });
 
-        let running = true //to false to stop
+        let running = false //to false to stop
 
         if (body != null && testIfCanSpawn == OK && running) {
             return this.createCreep(body, name, {

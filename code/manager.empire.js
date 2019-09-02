@@ -114,7 +114,7 @@ class mngEmpire {
 		//Fill myRooms
 		var myroomlist = _.values(Game.rooms).filter(r => _.get(r, ['controller', 'owner', 'username'], undefined) === playerUsername);
 		for (let m in myroomlist) {
-			myRooms[myroomlist[m].name] = myroomlist[m];
+			global.myRooms[myroomlist[m].name] = myroomlist[m];
 		}
 		
 		

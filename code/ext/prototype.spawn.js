@@ -47,7 +47,7 @@ StructureSpawn.prototype.createCustomCreep =
             });
         } else {
             if (energy > this.room.energyCapacityAvailable || testIfCanSpawn != -6) {
-                console.log(this.name + " result: " + testIfCanSpawn + " body: " + body + " energyValiable: " + this.room.energyAvailable + "/" + this.room.energyCapacityAvailable + "<br> " +
+                console.log(this.name + "ERR =  result: " + testIfCanSpawn + " body: " + body + " energyValiable: " + this.room.energyAvailable + "/" + this.room.energyCapacityAvailable + "<br> " +
                     energy, roleName, home = this.room, target, sourceId)
             }
         }

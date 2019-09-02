@@ -124,8 +124,8 @@ class mngColony {
 
         if ((Game.time % DELAYSPAWNING) == 0 && Game.cpu.bucket > CPU_THRESHOLD) {
             try {
-                //Game.rooms[this.homeRoom].creepSpawnRun(Game.rooms[this.homeRoom]);
-                this.RoomSpawn.run()
+                Game.rooms[this.homeRoom].creepSpawnRun(Game.rooms[this.homeRoom]);
+                //this.RoomSpawn.run()
             } catch (err) {
                 console.log("SPAWNING ERR: " + this.homeRoom + " " + err.stack)
             }
@@ -425,7 +425,6 @@ class mngColony {
                 size: '0.7',
                 align: 'left',
                 opacity: 0.5,
-                'backgroundColor': '#040404',
                 color: 'white'
             });
         room.visual.text("Roads: " + roadDecay.toFixed(2) + " | Ramparts: " + rampartsDecay.toFixed(2) + " | Containers: " + containersDecay.toFixed(2) + " | F/R/B: " + (numberOfWallRepairers.length * fortifyCostPerTick).toFixed(2),
@@ -433,7 +432,6 @@ class mngColony {
                 size: '0.7',
                 align: 'left',
                 opacity: 0.5,
-                'backgroundColor': '#040404',
                 color: 'white'
             });
         room.visual.text("Energy surpluss: " + energySurpluss.toFixed(2) + " | construction cost left: " + constructionCost + " | fortify left: " + fortifyWorkLeftTicks.toFixed(2) + " ticks",
@@ -441,7 +439,6 @@ class mngColony {
                 size: '0.7',
                 align: 'left',
                 opacity: 0.5,
-                'backgroundColor': '#040404',
                 color: 'white'
             });
         room.visual.text("RCL Praise left: " + praiseLeft.toFixed(2) + " (" + (praiseLeft / energySurpluss).toFixed(2) + " ticks) | Praised last tick: " + amountPraisedLastTick + " (" + (praiseLeft / amountPraisedLastTick).toFixed(2) + " ticks)",
@@ -449,7 +446,6 @@ class mngColony {
                 size: '0.7',
                 align: 'left',
                 opacity: 0.5,
-                'backgroundColor': '#040404',
                 color: 'white'
             });
         room.visual.text("Storage energy target: " + storageTarget + " | Ticks to reach: " + ticksToStorageTarget + " | (CPU used: " + (Game.cpu.getUsed() - cpuStart).toFixed(2) + ")",
@@ -457,7 +453,6 @@ class mngColony {
                 size: '0.7',
                 align: 'left',
                 opacity: 0.5,
-                'backgroundColor': '#040404',
                 color: 'white'
             });
 
@@ -471,7 +466,6 @@ class mngColony {
             size: '0.7',
             align: 'left',
             opacity: 0.5,
-            'backgroundColor': '#040404',
             color: 'white'
         });
 
@@ -479,7 +473,6 @@ class mngColony {
             size: '0.7',
             align: 'left',
             opacity: 0.5,
-            'backgroundColor': '#040404',
             color: 'white'
         });
 
@@ -502,7 +495,6 @@ class mngColony {
                             size: '0.7',
                             align: 'right',
                             opacity: 0.5,
-                            'backgroundColor': '#040404',
                             color: 'white'
                         });
                     i++;
