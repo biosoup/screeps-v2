@@ -26,6 +26,7 @@ require("ext.prototype.spawn")
 require("ext.prototype.structure")
 require("ext.prototype.tower")
 
+let economy = require('manager.economy');
 
 module.exports.loop = function() {
     MemHack.pretick()
@@ -113,6 +114,15 @@ module.exports.loop = function() {
             }
             stats.addStat('spawn-busy', {}, spawnBusy)
 
+            try {
+                //economy.run()
+                for (let room in Game.rooms) {
+                    stats.addStat('economy', {}, economy.collectRooms(room))
+                }
+            } catch (err) {
+                console.log("ECONOMY ERR: " + err.stack)
+            }
+
             var countHostiles = 0;
             for (var roomName in Game.rooms) {
                 var hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);
@@ -127,5 +137,7 @@ module.exports.loop = function() {
 
             stats.commit();
         }
+
+
     });
 }
