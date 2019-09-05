@@ -20,10 +20,12 @@ module.exports = {
                     } else if (creep.carry.energy == creep.carryCapacity) {
                         //look for a link
                         var link = _.first(source.pos.findInRange(creep.room.links, 2))
-                        if (!_.isEmpty(link) && creep.room.energy == creep.room.energyCapacity/2) {
+                        if (!_.isEmpty(link)) {
+                            //TODO: check for controller/core links energy levels
                             if (link.energy < link.energyCapacity) {
                                 //there is a space in the link
                                 creep.task = Tasks.transfer(link);
+                                creep.say(EM_LIGHTNING, true)
                                 return;
                             } else if (container.store[RESOURCE_ENERGY] < container.storeCapacity) {
                                 // harvest source
